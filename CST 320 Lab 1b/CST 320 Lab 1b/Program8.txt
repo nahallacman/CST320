@@ -1,0 +1,14 @@
+int main()
+{	
+	int a;
+	int b;
+	int c;
+	c = 1;
+	test();
+}
+
+int other()
+{
+	int d;
+	test2();
+}

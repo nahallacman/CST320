@@ -1,0 +1,29 @@
+#include "Program3.txt"
+#define a 3
+#ifdef a
+#define b 4
+#else
+#define b 3
+#endif
+#ifndef c
+#define c
+#endif
+int fun1()
+{
+				
+
+
+
+	char a; char b; char  c;
+	ch
+	int i = 0;
+	int 0a;
+	loop_top:
+	++i;
+	if( i <= 5 )
+	{
+		printf( "%i" , i );
+		goto loop_top;
+	}
+	return 0;
+};

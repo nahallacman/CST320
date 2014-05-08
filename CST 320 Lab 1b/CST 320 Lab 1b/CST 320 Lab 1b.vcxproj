@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ampersand.txt" />
+    <Text Include="asterix.txt" />
+    <Text Include="asterixasterix.txt" />
+    <Text Include="char.txt" />
+    <Text Include="closebracket.txt" />
+    <Text Include="closeparen.txt" />
+    <Text Include="comma.txt" />
+    <Text Include="else.txt" />
+    <Text Include="equals.txt" />
+    <Text Include="equalsequals.txt" />
+    <Text Include="forwardslash.txt" />
+    <Text Include="goto.txt" />
+    <Text Include="greaterthan.txt" />
+    <Text Include="greaterthanorequalto.txt" />
+    <Text Include="if.txt" />
+    <Text Include="input.txt" />
+    <Text Include="int.txt" />
+    <Text Include="LegalCVariable.txt" />
+    <Text Include="LegalLabel.txt" />
+    <Text Include="LegalNumericConstant.txt" />
+    <Text Include="lessthan.txt" />
+    <Text Include="lessthanorequalto.txt" />
+    <Text Include="main.txt" />
+    <Text Include="minus.txt" />
+    <Text Include="minusminus.txt" />
+    <Text Include="openbracket.txt" />
+    <Text Include="openparen.txt" />
+    <Text Include="output.txt" />
+    <Text Include="percent.txt" />
+    <Text Include="pipe.txt" />
+    <Text Include="plus.txt" />
+    <Text Include="plusplus.txt" />
+    <Text Include="printf.txt" />
+    <Text Include="Program1.txt" />
+    <Text Include="Program10.txt" />
+    <Text Include="Program11.txt" />
+    <Text Include="Program2.txt" />
+    <Text Include="Program3.txt" />
+    <Text Include="Program4.txt" />
+    <Text Include="Program5.txt" />
+    <Text Include="Program6.txt" />
+    <Text Include="Program7.txt" />
+    <Text Include="Program8.txt" />
+    <Text Include="Program9.txt" />
+    <Text Include="README.txt" />
+    <Text Include="return.txt" />
+    <Text Include="scanf.txt" />
+    <Text Include="semicolon.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DFA.cpp" />
+    <ClCompile Include="DFAWrapper.cpp" />
+    <ClCompile Include="LexicalCheckNode.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Preprocessor.cpp" />
+    <ClCompile Include="RecursiveParser.cpp" />
+    <ClCompile Include="RecursiveParser_old.cpp" />
+    <ClCompile Include="Symbol.cpp" />
+    <ClCompile Include="SymbolTable.cpp" />
+    <ClCompile Include="Token.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DFA.h" />
+    <ClInclude Include="DFAWrapper.h" />
+    <ClInclude Include="LexicalCheckNode.h" />
+    <ClInclude Include="Preprocessor.h" />
+    <ClInclude Include="RecursiveParser.h" />
+    <ClInclude Include="RecursiveParser_old.h" />
+    <ClInclude Include="Symbol.h" />
+    <ClInclude Include="SymbolTable.h" />
+    <ClInclude Include="Token.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Program.ppc" />
+    <None Include="Program.ppd" />
+    <None Include="Program1.pp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{51C21BA0-DF8A-461B-A9FA-55201A04D7E9}</ProjectGuid>
+    <RootNamespace>CST320Lab1b</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); _CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

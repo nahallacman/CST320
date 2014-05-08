@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\DFAs">
+      <UniqueIdentifier>{1c89607a-17db-422c-8fb8-e391e5d304f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Intermediate Files">
+      <UniqueIdentifier>{82c6c9f3-2549-4ab3-8e42-73336f8cd911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Old Test Files">
+      <UniqueIdentifier>{4603732b-7ba5-4deb-a119-9507549a0463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\New Test Files">
+      <UniqueIdentifier>{26c8395b-1533-4750-a017-8f303606ab1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\DFAs\Old">
+      <UniqueIdentifier>{a2af2c8b-3c4c-45bc-9419-e9bdfe11e99f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\DFAs\New">
+      <UniqueIdentifier>{a52beb7e-8180-4b90-8a8b-1cd75cc7cfd4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="README.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Program1.txt">
+      <Filter>Resource Files\Old Test Files</Filter>
+    </Text>
+    <Text Include="Program2.txt">
+      <Filter>Resource Files\Old Test Files</Filter>
+    </Text>
+    <Text Include="Program3.txt">
+      <Filter>Resource Files\Old Test Files</Filter>
+    </Text>
+    <Text Include="Program4.txt">
+      <Filter>Resource Files\Old Test Files</Filter>
+    </Text>
+    <Text Include="Program5.txt">
+      <Filter>Resource Files\Old Test Files</Filter>
+    </Text>
+    <Text Include="Program6.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+    <Text Include="Program7.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+    <Text Include="Program8.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+    <Text Include="Program9.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+    <Text Include="input.txt">
+      <Filter>Resource Files\DFAs\New</Filter>
+    </Text>
+    <Text Include="ampersand.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="asterix.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="asterixasterix.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="char.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="closebracket.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="closeparen.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="comma.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="else.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="equals.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="equalsequals.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="forwardslash.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="goto.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="greaterthan.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="greaterthanorequalto.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="if.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="int.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="LegalCVariable.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="LegalLabel.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="LegalNumericConstant.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="lessthan.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="lessthanorequalto.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="main.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="minus.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="minusminus.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="openbracket.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="openparen.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="percent.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="pipe.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="plus.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="plusplus.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="printf.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="return.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="scanf.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="semicolon.txt">
+      <Filter>Resource Files\DFAs\Old</Filter>
+    </Text>
+    <Text Include="output.txt">
+      <Filter>Resource Files\DFAs\New</Filter>
+    </Text>
+    <Text Include="Program10.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+    <Text Include="Program11.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DFA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DFAWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LexicalCheckNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SymbolTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursiveParser_old.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursiveParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DFA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DFAWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LexicalCheckNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Preprocessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecursiveParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecursiveParser_old.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymbolTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Program.ppc">
+      <Filter>Resource Files\Intermediate Files</Filter>
+    </None>
+    <None Include="Program.ppd">
+      <Filter>Resource Files\Intermediate Files</Filter>
+    </None>
+    <None Include="Program1.pp">
+      <Filter>Resource Files\Intermediate Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

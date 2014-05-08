@@ -1,0 +1,28 @@
+char fun3( int a )
+{
+	char retval;
+	retval = "a";
+	retval = retval + a;
+	return retval;
+}
+
+int fun1()
+{
+				
+
+
+
+	char a; char b; char  c;
+	ch
+	int i = 0;
+	int 0a;
+	loop_top:
+	++i;
+	if( i <= 5 )
+	{
+		printf( "%i" , i );
+		goto loop_top;
+	}
+	return 0;
+};
+

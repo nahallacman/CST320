@@ -1,0 +1,9 @@
+#include "Program1.txt"
+
+char fun3( int a )
+{
+	char retval;
+	retval = "a";
+	retval = retval + a;
+	return retval;
+}
