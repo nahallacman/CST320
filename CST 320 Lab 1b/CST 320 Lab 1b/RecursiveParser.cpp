@@ -602,11 +602,82 @@ bool RecursiveParser::Statement()
 	}
 	else if (_currentToken->getString() == "while") //'while'  '(' EXPRESSION ')' BRACKETS
 	{
-		return false;
+		FetchNext();
+		if (_currentToken->getString() == "(")		// '('
+		{
+			FetchNext();
+			Expression();							// EXPRESSION
+			if (_currentToken->getString() == ")")	//')'
+			{
+				FetchNext();
+				if (Brackets())						//BRACKETS
+				{
+					return true;
+				}
+				else
+				{
+					_errors.push_back("no brackets after a while statement");
+					_currentToken = _StatementStart;
+					return false;
+				}
+			}
+			else
+			{
+				_errors.push_back("no matching ) after a while statement");
+				_currentToken = _StatementStart;
+				return false;
+			}
+		}
+		else
+		{
+			_errors.push_back("no ( after a while statement");
+			_currentToken = _StatementStart;
+			return false;
+		}
 	}
-	else if (_currentToken->getString() == "input") // input '(' INPUT ')' ';'
+	else if (_currentToken->getString() == "input") // input '(' variable ')' ';'
 	{
-		return false;
+		FetchNext();
+		if (_currentToken->getString() == "(")		// '('
+		{
+			FetchNext();
+			if (_currentToken->getTokenType() == TokenType::VARIABLE) // check for a variable
+			{
+				FetchNext();
+				if (_currentToken->getString() == ")")	//')'
+				{
+					FetchNext();
+					if (_currentToken->getString() == ";")		// ';'				
+					{
+						return true; // completed input statement
+					}
+					else
+					{
+						_errors.push_back("no ; after an input statement");
+						_currentToken = _StatementStart;
+						return false;
+					}
+				}
+				else
+				{
+					_errors.push_back("no matching ) after an input statement");
+					_currentToken = _StatementStart;
+					return false;
+				}
+			}
+			else
+			{
+				_errors.push_back("no variable in input statement");
+				_currentToken = _StatementStart;
+				return false;
+			}
+		}
+		else
+		{
+			_errors.push_back("no ( after an input statement");
+			_currentToken = _StatementStart;
+			return false;
+		}
 	}
 	else if (_currentToken->getString() == "output") // output '(' INPUT ')' ';'
 	{
@@ -653,6 +724,10 @@ bool RecursiveParser::Statement()
 	}
 }
 
+/* 
+INPUT = variable
+
+*/
 
 /*
 ELSE = ‘else’ STATEMENT
