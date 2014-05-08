@@ -14,12 +14,13 @@ class RecursiveParser
 public:
 	RecursiveParser(list<Token> tokens, SymbolTable _symbolTable);
 	bool Parse();
+	void PrintErrors();
 
 private:
 	void FetchNext();
 	void BackOne();
 	void Print(string _print);
-	void PrintErrors();
+	
 
 	
 	bool Program();

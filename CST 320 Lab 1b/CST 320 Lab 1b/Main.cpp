@@ -39,6 +39,7 @@ int main()
 	}
 	else
 	{
+		Parser.PrintErrors();
 		cout << "Parse failed" << endl;
 	}
 	system("pause");

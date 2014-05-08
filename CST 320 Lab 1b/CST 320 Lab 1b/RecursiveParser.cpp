@@ -693,6 +693,7 @@ bool RecursiveParser::Statement()
 		}
 		else
 		{
+			_errors.push_back("no ; after a return statement");
 			_currentToken = _StatementStart;
 			return false;
 		}
@@ -707,6 +708,7 @@ bool RecursiveParser::Statement()
 		}
 		else
 		{
+			_errors.push_back("no ; after a EXPRESSION");
 			_currentToken = _StatementStart;
 			return false;
 		}
@@ -768,7 +770,7 @@ bool RecursiveParser::Return()
 	{
 		_ruleTree.pop();
 		BackOne();
-		return false;
+		return true;
 	}
 }
 
