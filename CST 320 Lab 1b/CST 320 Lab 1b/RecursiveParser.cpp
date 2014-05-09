@@ -412,6 +412,7 @@ bool RecursiveParser::Brackets()
 				//FetchNext(); this breaks things when going for the first closing }
 				if (_currentToken->getString() == "}")
 				{
+					FetchNext(); //testing this here, possible that brackets() would get to the } and never most past
 					return true;
 				}
 				else
@@ -689,6 +690,7 @@ bool RecursiveParser::Statement()
 		Return();
 		if (_currentToken->getString() == ";")
 		{
+			FetchNext();
 			return true;
 		}
 		else
@@ -760,10 +762,10 @@ RETURN = EXPRESSION
 bool RecursiveParser::Return()
 {
 	_ruleTree.push("Return");
-	FetchNext();
 	//if (Expression())
 	if (Expression())
 	{
+		 // maybe?
 		return true;
 	}
 	else
@@ -905,6 +907,7 @@ bool RecursiveParser::P2()
 		FetchNext();
 		if (_currentToken->getString() == ")")
 		{
+			FetchNext();//possibly, testing this
 			return true;
 		}
 		else

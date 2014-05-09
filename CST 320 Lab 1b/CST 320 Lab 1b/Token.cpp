@@ -2,17 +2,24 @@
 Token::Token()
 {
 	m_isDefined = false;
+	m_key = "";
 	m_value = "";
 	m_type = TokenType::UNDEFINED;
 }
 
-Token::Token(string value, TokenType type) : m_value(value), m_type(type)
+Token::Token(string key, TokenType type) : m_key(key), m_type(type)
 {
 	m_isDefined = false;
 }
 
-Token::Token(string value, TokenType type, bool isDefined) : m_value(value), m_type(type), m_isDefined(isDefined)
+Token::Token(string key, TokenType type, bool isDefined) : m_key(key), m_type(type), m_isDefined(isDefined)
 {
+	m_key = "";
+}
+
+Token::Token(string key, TokenType type, bool isDefined, string value) : m_key(key), m_type(type), m_isDefined(isDefined), m_value(value)
+{
+
 }
 
 TokenType Token::getTokenType()
@@ -22,12 +29,12 @@ TokenType Token::getTokenType()
 
 string Token::getString()
 {
-	return m_value;
+	return m_key;
 }
 	
-void Token::setString(string value)
+void Token::setString(string key)
 {
-	m_value = value;
+	m_key = key;
 }
 
 bool Token::getIsDefined()
@@ -38,4 +45,13 @@ bool Token::getIsDefined()
 void Token::setIsDefined(bool defined)
 {
 	m_isDefined = defined;
+}
+
+void Token::setValue(string value)
+{
+	m_value = value;
+}
+string Token::getValue()
+{
+	return m_value;
 }

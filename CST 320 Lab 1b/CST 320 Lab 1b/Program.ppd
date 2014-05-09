@@ -1,7 +1,16 @@
 int main()
 {	
 	int a;
-	int b;
-	test();
+	if ( a = 1 )
+	{
+		b = 2;
+		test();
+	}
+	while ( b )
+	{
+		int c;
+		test2();
+	}
+	return 1 ; 
 }
 
