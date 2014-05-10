@@ -88,3 +88,139 @@ semicolon.txt
 .ppc: PreProcessor Comments intermediate file
 .ppd: PreProcessor Directive output file
 .ltl: Lexically-analyzed Token List output file
+
+--------------------------------------Example input:-------------------------------------------
+
+int test()
+{
+	int a ;
+	a = 2 ;
+	input ( a ) ;
+}
+
+int main() 
+{	
+	int b;
+	b = 1;
+	input ( b ) ;
+} 
+
+--------------------------------------Example output:------------------------------------------
+
+ Starting Preprocessor
+Removing Comments --
+int test()
+{
+        int a ;
+        a = 2 ;
+        input ( a ) ;
+}
+int main()
+{
+        int b;
+        b = 1;
+        input ( b ) ;
+}
+Handling preprocessor directives --
+int test()
+{
+        int a ;
+        a = 2 ;
+        input ( a ) ;
+}
+int main()
+{
+        int b;
+        b = 1;
+        input ( b ) ;
+}
+
+--------Begin Symbol Table--------
+---------End Symbol Table---------
+ Starting Lexical Analyzer
+int             Keyword
+test            Identifier
+(               Symbol
+)               Symbol
+{               Symbol
+int             Keyword
+a               Identifier
+;               Symbol
+a               Identifier
+=               Operator
+2               Numeric Constant
+;               Symbol
+input           Keyword
+(               Symbol
+a               Identifier
+)               Symbol
+;               Symbol
+}               Symbol
+int             Keyword
+main            Keyword
+(               Symbol
+)               Symbol
+{               Symbol
+int             Keyword
+b               Identifier
+;               Symbol
+b               Identifier
+=               Operator
+1               Numeric Constant
+;               Symbol
+input           Keyword
+(               Symbol
+b               Identifier
+)               Symbol
+;               Symbol
+}               Symbol
+Press any key to continue . . .
+Begin stack based rule tree. Printing from the top of the stack.
+Statement
+Statement_Group
+S2
+Primary
+P2
+Primary
+Statement
+Statement_Group
+Identifier_List
+Data_Definition
+Data_Definition_List
+Brackets
+Func_Args
+Function_Definition
+D2
+Definition
+Program
+Statement
+Statement_Group
+S2
+Primary
+P2
+Primary
+Statement
+Statement_Group
+Identifier_List
+Data_Definition
+Data_Definition_List
+Brackets
+Func_Args
+Function_Definition
+Identifier_List
+Data_Definition
+D2
+Definition
+Program
+Start
+End stack based rule tree.
+Parse succeeded
+--------Begin Symbol Table--------
+Symbol: a  is a variable a defined as: 2
+Symbol: b  is a variable b defined as: 1
+Symbol: main  is a Function main ( )  defined as: { int b ; b = 1 ; input ( b )
+; }
+Symbol: test  is a Function test ( )  defined as: { int a ; a = 2 ; input ( a )
+; } int
+---------End Symbol Table---------
+Press any key to continue . . .

@@ -17,11 +17,13 @@ bool RecursiveParser::Parse()
 	*/
 	if (Start())
 	{
+		cout << "Begin stack based rule tree. Printing from the top of the stack." << endl;
 		while (!_ruleTree.empty())
 		{
 			cout << _ruleTree.top() << endl;
 			_ruleTree.pop();
 		}
+		cout << "End stack based rule tree." << endl;
 		return true;
 	}
 	else return false;
