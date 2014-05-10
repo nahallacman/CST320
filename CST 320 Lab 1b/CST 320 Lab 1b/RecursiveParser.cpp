@@ -71,6 +71,11 @@ void RecursiveParser::Print(string _print)
 	cout << _print << endl;
 }
 
+void RecursiveParser::PrintSymbolTable()
+{
+	m_SymbolTable.PrintTable();
+}
+
 /*
 START = PROGRAM
 */
@@ -191,14 +196,47 @@ DATA_DEFINITION = IDENTIFIER_LIST ';'
 bool RecursiveParser::Data_Definition()
 {
 	_ruleTree.push("Data_Definition");
-
+	list<Token>::iterator _dataDefinion = _currentToken;
 	if (Identifier_List())
 	{
+		list<Token>::iterator _endOfList = _currentToken;
 		//FetchNext();
 		if (_currentToken->getString() == ";")
 		{
 			//data has been declared (but maybe not defined)
-			//search backwards looking for variables? not sure here, ask sherri in class
+			//search backwards looking for variables using predeclared iterators
+			for (list<Token>::iterator x = _dataDefinion; x != _endOfList; x++)
+			{
+				if (x->getString() == ",")
+				{
+					x++;
+				}
+				if (m_SymbolTable.checkSymbolTable(x->getString()))//check if it was in the table
+				{
+					//variable definition starts here
+					Token var_def(x->getString(), TokenType::VARIABLE, false);
+					m_SymbolTable.addSymbol(x->getString(), var_def);
+				}
+				else
+				{
+					string error;
+					Token Terror = m_SymbolTable.GetToken(x->getString());
+					error += "Varible ";
+					error += x->getString();
+					if (Terror.getIsDefined())
+					{
+						error += " is already defined as ";
+						error += Terror.getValue();
+					}
+					else
+					{
+						error += " has already been declared but not defined.";
+					}
+					_errors.push_back(error);
+					return false; // this return here is a big maybe, it might break things
+				}
+			}
+
 			return true;
 		}
 		else
@@ -262,9 +300,28 @@ FUNCTION_DEFINITION = IDENTIFIER '(' FUNC_ARGS ')' BRACKETS
 bool RecursiveParser::Function_Definition()
 {
 	list<Token>::iterator _Function_DefinitionStart = _currentToken;
+	list<Token>::iterator _functionHeader;
 	_ruleTree.push("Function_Definition");
 	if ((_currentToken->getTokenType() == TokenType::VARIABLE) | (_currentToken->getString() == "main"))  // TODO: main definition should not be in this statement
 	{
+		//check the variable to see if it already used. if it is not in the symboltable then add it to the symbol table as a type function
+		if (m_SymbolTable.checkSymbolTable(_currentToken->getString()))
+		{
+			Token fun_def(_currentToken->getString(), TokenType::FUNCTION, false);
+			m_SymbolTable.addSymbol(_currentToken->getString(), fun_def);
+		}
+		else
+		{
+			string error;
+			error += "Symbol ";
+			error += m_SymbolTable.GetToken(_currentToken->getString()).getString();
+			error += " has already been defined as: ";
+			error += m_SymbolTable.GetToken(_currentToken->getString()).getValue();
+			_errors.push_back(error);
+		}
+		//begin function declaration
+		_functionHeader = _currentToken;
+
 		FetchNext();
 		if (_currentToken->getString() == "(")
 		{
@@ -273,24 +330,57 @@ bool RecursiveParser::Function_Definition()
 			FetchNext();
 			if (_currentToken->getString() == ")")
 			{
+				string headerStr;
 				FetchNext();
-				//function definition here
-				return Brackets();
+
+				//end function defintion here (_functionHeader - > _currentToken)
+				for (list<Token>::iterator x = _functionHeader; x != _currentToken; x++)
+				{
+					headerStr += x->getString();
+					headerStr += " ";
+				}
+				Token fun_def(headerStr, TokenType::FUNCTION, false);
+				m_SymbolTable.addSymbol(_functionHeader->getString(), fun_def);
+
+				list<Token>::iterator fun_body = _currentToken;
+				string bodyStr;
+				//function content here
+				if (Brackets())
+				{
+					for (list<Token>::iterator x = fun_body; x != _currentToken; x++)
+					{
+						bodyStr += x->getString();
+						bodyStr += " ";
+					}
+					bodyStr += _currentToken->getString();
+					Token fun_body(headerStr, TokenType::FUNCTION, true, bodyStr);
+					m_SymbolTable.addSymbol(_functionHeader->getString(), fun_body);
+
+					return true;
+				}
+				else
+				{
+					_errors.push_back("Error in Brackets() within Function_Definition()");
+					return false;
+				}
 			}
 			else
 			{
+				_errors.push_back("Missing ) in Function_Definition()");
 				_currentToken = _Function_DefinitionStart;
 				return false;
 			}
 		}
 		else
 		{
+			_errors.push_back("Missing ( in Function_Definition()");
 			_currentToken = _Function_DefinitionStart;
 			return false;
 		}
 	}
 	else
 	{
+		_errors.push_back("Missing Identifier at beginning of Function_Definition()");
 		_ruleTree.pop();
 		return false;
 	}
@@ -305,9 +395,6 @@ bool RecursiveParser::Identifier_List()
 	_ruleTree.push("Identifier_List");
 	if (_currentToken->getTokenType() == TokenType::VARIABLE)
 	{
-		//variable definition starts here
-		Token var_def(_currentToken->getString(), TokenType::VARIABLE, false);
-		m_SymbolTable.addSymbol(_currentToken->getString(), var_def);
 		FetchNext();
 		return Id2();
 	}
@@ -372,6 +459,7 @@ bool RecursiveParser::Paramater_List()
 			}
 			else
 			{
+				_errors.push_back("Missing ; from end of Paramater_List()");
 				BackOne();
 				BackOne();
 				BackOne();
@@ -380,6 +468,7 @@ bool RecursiveParser::Paramater_List()
 		}
 		else
 		{
+			_errors.push_back("Missing Identifier_List() after 'int' in Paramater_List()");
 			BackOne();
 			BackOne();
 			return false;
@@ -417,25 +506,28 @@ bool RecursiveParser::Brackets()
 				}
 				else
 				{
-					_errors.push_back("Missing a }");
+					_errors.push_back("Missing a } for Brackets()");
 					_currentToken = _BracketsStart;
 					return false;
 				}
 			}
 			else
 			{
+				_errors.push_back("Malformed Statement_Group() in Brackets()");
 				_currentToken = _BracketsStart;
 				return false;
 			}
 		}
 		else
 		{
+			_errors.push_back("Malformed Data_Definition_List() in Brackets()");
 			_currentToken = _BracketsStart;
 			return false;
 		}
 	}
 	else
 	{
+		_errors.push_back("Missing { from beginning of Brackets()");
 		_ruleTree.pop();
 		return false;
 	}
@@ -507,51 +599,6 @@ bool RecursiveParser::S2()
 }
 
 /*
-STATEMENT =   	'if' '(' EXPRESSION ')' STATEMENT ELSE |        	
-             	'while'  '(' EXPRESSION ')' STATEMENT  |                 	
-             	'return' RETURN ';' |
-				BRACKETS |
-				EXPRESSION ';' 
-
- */
-
-/*
-bool RecursiveParser::Statement() 
-{
-	if (_currentToken->getString() == "if") //'if' '(' EXPRESSION ')' STATEMENT ELSE
-	{
-		//look for (
-	}
-	else if (_currentToken->getString() == "while") //'while'  '(' EXPRESSION ')' STATEMENT 
-	{
-
-	}
-	else if (_currentToken->getString() == "return") // 'return' RETURN ';' |
-	{
-
-	}
-	else if (Brackets())
-	{
-		return true;
-	}
-	else if (Expression())
-	{
-		FetchNext();
-		if (_currentToken->getString() == ";")
-		{
-			return true;
-		}
-		else
-		{
-			BackOne();
-			return false;
-		}
-	}
-	return false;
-}
-*/
-
-/*
 STATEMENT =   	'if' '(' EXPRESSION ')' BRACKETS ELSE |
 				'while'  '(' EXPRESSION ')' BRACKETS  |
 				input '(' INPUT ')' ';' |
@@ -559,7 +606,6 @@ STATEMENT =   	'if' '(' EXPRESSION ')' BRACKETS ELSE |
 				'return' RETURN ';' |
 				EXPRESSION ';'
 */
-
 
 bool RecursiveParser::Statement()
 {
@@ -571,7 +617,7 @@ bool RecursiveParser::Statement()
 		if (_currentToken->getString() == "(")
 		{
 			FetchNext();
-			Expression();
+			Expression();	// eventually I will need to add in an examination of this expression 
 			if (_currentToken->getString() == ")")
 			{
 				FetchNext();
@@ -682,6 +728,7 @@ bool RecursiveParser::Statement()
 	}
 	else if (_currentToken->getString() == "output") // output '(' INPUT ')' ';'
 	{
+		_errors.push_back("output statements not yet implimented");
 		return false;
 	}
 	else if (_currentToken->getString() == "return") // 'return' RETURN ';' |
@@ -723,6 +770,7 @@ bool RecursiveParser::Statement()
 	*/
 	else
 	{
+		_errors.push_back("No rules matched in Statement");
 		_ruleTree.pop();
 		return false;
 	}
@@ -921,12 +969,14 @@ bool RecursiveParser::P2()
 				}
 				else
 				{
+					_errors.push_back("no ) after func_args() in P2()");
 					_currentToken = _P2Start;
 					return false;
 				}
 			}
 			else
 			{
+				_errors.push_back("error in func_args() in P2()");
 				_currentToken = _P2Start;
 				return false;
 			}

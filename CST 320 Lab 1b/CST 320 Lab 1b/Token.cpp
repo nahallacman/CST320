@@ -14,7 +14,7 @@ Token::Token(string key, TokenType type) : m_key(key), m_type(type)
 
 Token::Token(string key, TokenType type, bool isDefined) : m_key(key), m_type(type), m_isDefined(isDefined)
 {
-	m_key = "";
+	m_value = "";
 }
 
 Token::Token(string key, TokenType type, bool isDefined, string value) : m_key(key), m_type(type), m_isDefined(isDefined), m_value(value)

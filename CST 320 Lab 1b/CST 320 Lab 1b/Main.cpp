@@ -36,11 +36,12 @@ int main()
 	if(Parser.Parse())
 	{
 		cout << "Parse succeeded" << endl;
+		Parser.PrintSymbolTable();
 	}
 	else
 	{
-		Parser.PrintErrors();
 		cout << "Parse failed" << endl;
+		Parser.PrintErrors();
 	}
 	system("pause");
 	return 0;

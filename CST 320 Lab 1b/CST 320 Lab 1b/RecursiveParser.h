@@ -15,6 +15,7 @@ public:
 	RecursiveParser(list<Token> tokens, SymbolTable _symbolTable);
 	bool Parse();
 	void PrintErrors();
+	void PrintSymbolTable();
 
 private:
 	void FetchNext();

@@ -57,12 +57,6 @@
     <Text Include="Program7.txt">
       <Filter>Resource Files\New Test Files</Filter>
     </Text>
-    <Text Include="Program8.txt">
-      <Filter>Resource Files\New Test Files</Filter>
-    </Text>
-    <Text Include="Program9.txt">
-      <Filter>Resource Files\New Test Files</Filter>
-    </Text>
     <Text Include="input.txt">
       <Filter>Resource Files\DFAs\New</Filter>
     </Text>

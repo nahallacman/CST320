@@ -27,14 +27,66 @@ void SymbolTable::PrintTable()
 
 void SymbolTable::Display(string key, Token print)
 {
-	cout << "Symbol: " << key;
+	cout << "Symbol: " << key << " ";
 	switch (print.getTokenType())
 	{
+	case UNDEFINED:
+		cout << " Error, somehow an undefined made it this far!" << endl;
+		break;
+	case NUMCONSTANT:
+		cout << " Error, somehow a numconstant made it this far!" << endl;
+		break;
+	case STRCONSTANT:
+		cout << " Error, somehow a strconstant made it this far!" << endl;
+		break;
+	case SYMBOL: 
+		cout << " Error, somehow a symbol made it this far!" << endl;
+		break;
+	case OPERATOR:
+		cout << " Error, somehow an operator made it this far!" << endl;
+		break;
+	case KEYWORD: 
+		cout << " Error, somehow a keyword made it this far!" << endl;
+		break;
+	case LABEL: 
+		cout << " Error, somehow a label made it this far!" << endl;
+		break;
+	case VARIABLE:
+		cout << " is a variable " << print.getString();
+		if (print.getIsDefined())
+		{	
+			cout << " defined as: " << print.getValue() << endl;
+		}
+		else
+		{
+			cout << " which was declared but not defined." << endl;
+		}
+		break;
 	case DEFINE:
-		cout << " # defined as " << print.getString() << endl;
+		cout << " is a #define " << print.getString() << " # defined as: " << print.getValue() << endl;
+		break;
+	case FUNCTION:
+		cout << " is a Function " << print.getString() << " defined as: " << print.getValue() << endl;
 		break;
 	default: 
-		cout << " unknown symbol type" << print.getString() << endl;
+		cout << " ERROR unknown symbol type" << print.getString() << endl;
 		break;
 	}
+}
+
+bool SymbolTable::checkSymbolTable(string key)
+{
+	if (m_SymbolTable[key].getString() == "")
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+Token SymbolTable::GetToken(string key)
+{
+	return m_SymbolTable[key];
 }
