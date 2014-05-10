@@ -4,7 +4,7 @@ Right click the Project name in the solution explorer and go to properties.
 Under Configuration Properties->C/C++->Preprocessor, add _CRT_SECURE_NO_WARNINGS to the preprocessor definitons. (If you don't do this visual studios complains about strcpy and strncpy)
 
 Program is run simply by debugging. Target program test files are changed in main.cpp line 27.
-The default program is Program9.txt.
+The default program is Program12.txt.
 
 To reach the intended output the program will promt the user to "press any key to continue..." twice. 
 After the first and just before the second prompt there will be a line that will read either "parse succeeded" or "parse failed".
@@ -38,7 +38,9 @@ Test program files:
 Program6.txt
 Program7.txt
 Program8.txt
-Program9.txt
+Program10.txt
+Program11.txt
+Program12.txt
 
 DFA files:
 LegalCVariable.txt

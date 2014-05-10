@@ -47,12 +47,14 @@
     <Text Include="Program1.txt" />
     <Text Include="Program10.txt" />
     <Text Include="Program11.txt" />
+    <Text Include="Program12.txt" />
     <Text Include="Program2.txt" />
     <Text Include="Program3.txt" />
     <Text Include="Program4.txt" />
     <Text Include="Program5.txt" />
     <Text Include="Program6.txt" />
     <Text Include="Program7.txt" />
+    <Text Include="Program8.txt" />
     <Text Include="README.txt" />
     <Text Include="return.txt" />
     <Text Include="scanf.txt" />

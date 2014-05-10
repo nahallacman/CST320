@@ -101,17 +101,16 @@ PROGRAM = DEFINITION PROGRAM
 	 }
 	 else if ( Definition() )
 	 {
-		 FetchNext(); // this is a maybe
+		 //FetchNext(); // this is a maybe
 		 if (_Done == true) // DEFINITION
 		 {
 			 return true;
 		 }
 		 else // DEFINITION PROGRAM
 		 {
-			 Program();
+			 return Program();
 		 }
 	 }
-	 return false; //?? not sure about this
  }
 
  /*
@@ -690,12 +689,14 @@ bool RecursiveParser::Statement()
 			FetchNext();
 			if (_currentToken->getTokenType() == TokenType::VARIABLE) // check for a variable
 			{
+				//the variable here will eventually need to be checked if it is defined or declared
 				FetchNext();
 				if (_currentToken->getString() == ")")	//')'
 				{
 					FetchNext();
 					if (_currentToken->getString() == ";")		// ';'				
 					{
+						FetchNext();
 						return true; // completed input statement
 					}
 					else
@@ -726,7 +727,7 @@ bool RecursiveParser::Statement()
 			return false;
 		}
 	}
-	else if (_currentToken->getString() == "output") // output '(' INPUT ')' ';'
+	else if (_currentToken->getString() == "output") // output '(' OUTPUT ')' ';'
 	{
 		_errors.push_back("output statements not yet implimented");
 		return false;
@@ -770,14 +771,20 @@ bool RecursiveParser::Statement()
 	*/
 	else
 	{
-		_errors.push_back("No rules matched in Statement");
+		string error;
+		error += "No rules matched in Statement(). _currentToken is: ";
+		error += _currentToken->getString();
+		_errors.push_back(error);
 		_ruleTree.pop();
 		return false;
 	}
 }
 
 /* 
-INPUT = variable
+OUTPUT = variable
+		| string
+
+		THIS IS NOT COMPLETE
 
 */
 
@@ -930,8 +937,38 @@ bool RecursiveParser::Primary()
 	}
 	else if (_currentToken->getTokenType() == TokenType::VARIABLE)
 	{
-		FetchNext();
-		return P2();
+		//check if variable has been declared AND defined. If it is, move on. If it isn't, error message and return false;
+		if (m_SymbolTable.checkSymbolTable(_currentToken->getString()))
+		{
+			//variable hasn't been declared yet
+			string error;
+			error += "Variable ";
+			error += _currentToken->getString();
+			error += " was used without being declared first";
+			_errors.push_back(error);
+			//Token fun_def(_currentToken->getString(), TokenType::VARIABLE, false);
+			//m_SymbolTable.addSymbol(_currentToken->getString(), fun_def);
+			return false;
+		}
+		else
+		{
+			//variable has been declared
+			//check if it is defined
+			if (m_SymbolTable.GetToken(_currentToken->getString()).getIsDefined())
+			{
+				list<Token>::iterator _IdentifierStart = _currentToken;
+				//it is defined! when building the final project, this might be where you extract the value for use
+				FetchNext();
+				return P2(_IdentifierStart);
+			}
+			else
+			{
+				list<Token>::iterator _IdentifierStart = _currentToken;
+				//it is not defined, so try to define it
+				FetchNext();
+				return P2(_IdentifierStart);
+			}
+		}
 	}
 	else
 	{
@@ -946,7 +983,7 @@ P2 = '(' FUNC_ARGS ')' |
 		lambda
 */
 
-bool RecursiveParser::P2()
+bool RecursiveParser::P2(list<Token>::iterator _StatementStart)
 {
 	list<Token>::iterator _P2Start = _currentToken;
 	_ruleTree.push("P2");
@@ -984,8 +1021,39 @@ bool RecursiveParser::P2()
 	}
 	else if (_currentToken->getString() == "=")
 	{
+
 		FetchNext();
-		return Expression();
+		list<Token>::iterator _EqualsStart = _currentToken;
+		if (Expression())
+		{
+			if (m_SymbolTable.GetToken(_StatementStart->getString()).getIsDefined())
+			{
+				//redefine!
+			}
+			else
+			{
+				//define
+				//key from _StatementStart, value from _EqualsStart to _currentToken (hopefully ;?)
+			}
+			// since both paths end up defining,
+			string bodyStr;
+			for (list<Token>::iterator x = _EqualsStart; x != _currentToken; x++)
+			{
+				bodyStr += x->getString();
+				bodyStr += " ";
+			}
+			//bodyStr += _currentToken->getString();
+			Token equals_body(_StatementStart->getString(), TokenType::VARIABLE, true, bodyStr);
+			m_SymbolTable.addSymbol(_StatementStart->getString(), equals_body);
+
+
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{

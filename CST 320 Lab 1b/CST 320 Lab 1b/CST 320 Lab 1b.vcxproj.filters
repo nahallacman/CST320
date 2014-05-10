@@ -171,6 +171,12 @@
     <Text Include="Program11.txt">
       <Filter>Resource Files\New Test Files</Filter>
     </Text>
+    <Text Include="Program8.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
+    <Text Include="Program12.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DFA.cpp">

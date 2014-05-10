@@ -1,16 +1,13 @@
-int main()
+int test()
+{
+	int a ;
+	a = 2 ;
+	input ( a ) ;
+}
+int main() 
 {	
-	int a;
-	if ( a )
-	{
-		b = 2;
-		test();
-	}
-	while ( b )
-	{
-		int c;
-		test2();
-	}
-	return 1 ; 
+	int b;
+	b = 1;
+	input ( b ) ;
 } 
 

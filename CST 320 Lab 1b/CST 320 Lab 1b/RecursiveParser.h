@@ -44,7 +44,7 @@ private:
 	bool Expression();
 	bool Unary_Expression();
 	bool Primary();
-	bool P2();
+	bool P2(list<Token>::iterator _StatementStart);
 
 
 
