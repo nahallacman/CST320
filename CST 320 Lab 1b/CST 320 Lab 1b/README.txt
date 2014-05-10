@@ -57,6 +57,8 @@ main.txt
 printf.txt
 return.txt
 scanf.txt
+input.txt
+output.txt
 
 //operators
 asterix.txt
