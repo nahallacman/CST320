@@ -7,7 +7,6 @@ Program is run simply by debugging. Target program test files are changed in mai
 The default program is Program12.txt.
 
 To reach the intended output the program will promt the user to "press any key to continue..." twice. 
-After the first and just before the second prompt there will be a line that will read either "parse succeeded" or "parse failed".
 
 
  -------------------------------------- List of files ---------------------------------------------- 
