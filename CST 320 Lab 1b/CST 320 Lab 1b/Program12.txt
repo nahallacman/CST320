@@ -1,0 +1,14 @@
+
+int test()
+{
+	int a ;
+	a = 2 ;
+	input ( a ) ;
+}
+
+int main() 
+{	
+	int b;
+	b = 1;
+	input ( b ) ;
+} 

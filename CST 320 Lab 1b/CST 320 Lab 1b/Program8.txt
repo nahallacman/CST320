@@ -1,0 +1,14 @@
+int main() 
+{	
+	int a;
+	if ( 1 )
+	{
+		int b;
+		test();
+	}
+	while ( 1 )
+	{
+		int c;
+		test2();
+	}
+} 
