@@ -177,6 +177,9 @@
     <Text Include="Program12.txt">
       <Filter>Resource Files\New Test Files</Filter>
     </Text>
+    <Text Include="Program13.txt">
+      <Filter>Resource Files\New Test Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DFA.cpp">
@@ -209,6 +212,9 @@
     <ClCompile Include="RecursiveParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LL1Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DFA.h">
@@ -236,6 +242,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SymbolTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LL1Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

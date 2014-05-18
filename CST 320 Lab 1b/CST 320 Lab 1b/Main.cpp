@@ -3,6 +3,7 @@
 #include "Token.h"
 #include "LexicalCheckNode.h"
 #include "Preprocessor.h"
+#include "LL1Parser.h"
 #include "RecursiveParser.h"
 #include <fstream>
 #include <list>
@@ -25,13 +26,16 @@ int main()
 	SymbolTable the_symbolTable;
 
 	cout << " Starting Preprocessor " << endl;
-	Preprocessor pp("Program12.txt", the_symbolTable);
+	Preprocessor pp("Program13.txt", the_symbolTable);
 	the_symbolTable = pp.getSymbolTable();
 
 	cout << " Starting Lexical Analyzer " << endl;
 	tokens = LexicalAnalyzer("Program.ppd");
 
 	tokens = DefineReplacement(tokens, pp.getSymbols());
+	LL1Parser LL1P(tokens);
+	LL1P.Parse();
+	/*
 	RecursiveParser Parser(tokens, the_symbolTable);
 	if(Parser.Parse())
 	{
@@ -43,6 +47,7 @@ int main()
 		cout << "Parse failed" << endl;
 		Parser.PrintErrors();
 	}
+	*/
 	system("pause");
 	return 0;
 };
