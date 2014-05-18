@@ -34,7 +34,15 @@ int main()
 
 	tokens = DefineReplacement(tokens, pp.getSymbols());
 	LL1Parser LL1P(tokens);
-	LL1P.Parse();
+	if (LL1P.Parse())
+	{
+		cout << "Parse succeeded" << endl;
+	}
+	else
+	{
+		cout << "Parse failed" << endl;
+		LL1P.PrintErrors();
+	}
 	/*
 	RecursiveParser Parser(tokens, the_symbolTable);
 	if(Parser.Parse())

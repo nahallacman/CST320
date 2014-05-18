@@ -2,7 +2,7 @@
 
 LL1Parser::LL1Parser(list<Token> tokens) :_tokens(tokens)
 {
-	_Done == false;
+	_Done = false;
 	Token push("$", TokenType::UNDEFINED);
 	_tokens.push_back(push);
 	_currentToken = _tokens.begin();
@@ -16,17 +16,15 @@ bool LL1Parser::Parse()
 	string test = "";
 	string test_2 = "";
 	char space = ' ';
-	while ( _currentToken != _tokens.end() || retVal == true || _Done == false )
+	while ( _currentToken != _tokens.end() && retVal == true && _Done == false )
 	{
 		test = "";
 		if (_ruleStack.top() == _currentToken->getString())
 		{
 			cout << "Matched a character: " << _currentToken->getString() << endl;
-			string getstringvalue = _currentToken->getString();
-			string dollarsign = "$";
-			if (getstringvalue == dollarsign)
+			if (_currentToken->getString() == "$")
 			{
-				_Done == true;
+				_Done = true;
 			}
 			else
 			{
@@ -73,6 +71,12 @@ bool LL1Parser::Parse()
 		//_currentToken++;
 	}
 	return retVal;
+}
+
+void LL1Parser::PrintErrors()
+{
+	for (auto itr = _errors.begin(); itr != _errors.end(); ++itr)
+		cout << *itr << endl;
 }
 
 //could make this return true if the value was already assigned if needed later

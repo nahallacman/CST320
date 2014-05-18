@@ -14,7 +14,7 @@ class LL1Parser
 public:
 	LL1Parser(list<Token> tokens);
 	bool Parse();
-	//void PrintErrors();
+	void PrintErrors();
 	//void PrintSymbolTable();
 
 private:
