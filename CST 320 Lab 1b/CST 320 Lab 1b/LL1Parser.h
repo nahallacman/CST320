@@ -18,8 +18,8 @@ public:
 	//void PrintSymbolTable();
 
 private:
-	bool AddRule(string _key, string _input, string _result);
-	string GetRule(string _key, string _input);
+	bool AddRule(string _key, string _input, list<Token> _result);
+	list<Token> GetRule(string _key, string _input);
 	void buildRuleTable();
 
 	void FetchNext();
@@ -35,9 +35,9 @@ private:
 	//list<Token>::iterator _endToken;
 
 	//stack<string> _ruleTree;
-	stack<string> _ruleStack;
+	stack<Token> _ruleStack;
 
-	map<pair<string, string>, string> _ruleMap;
+	map<pair<string, string>, list<Token>> _ruleMap;
 
 	//SymbolTable m_SymbolTable;
 };

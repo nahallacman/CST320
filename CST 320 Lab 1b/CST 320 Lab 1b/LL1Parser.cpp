@@ -13,15 +13,21 @@ bool LL1Parser::Parse()
 {
 	bool retVal(true);
 	string errorString;
-	string test = "";
+	
 	string test_2 = "";
 	char space = ' ';
 	while ( _currentToken != _tokens.end() && retVal == true && _Done == false )
 	{
-		test = "";
-		if (_ruleStack.top() == _currentToken->getString())
+		list<Token> test;
+		while (test.empty() != true)
 		{
-			cout << "Matched a character: " << _currentToken->getString() << endl;
+			test.pop_front();
+		}
+		
+		if (_ruleStack.top().getString() == _currentToken->getString() || _ruleStack.top().getTokenType() == _currentToken->getTokenType()) // might need an OR top of the stack TYPE is the same as current token TYPE
+		{
+			cout << "Matched a token: " << _currentToken->getString() << endl;
+			//cout << "Matched a character: " << _currentToken->getString() << endl;
 			if (_currentToken->getString() == "$")
 			{
 				_Done = true;
@@ -35,31 +41,34 @@ bool LL1Parser::Parse()
 		}
 		else
 		{
-			test = GetRule(_ruleStack.top(), _currentToken->getString());
-			if (test != "")
+			test = GetRule(_ruleStack.top().getString(), _currentToken->getString());
+			if (test.empty() != true)
 			{
 				_ruleStack.pop();
-				//push entire "test" string onto rule stack in reverse order
-				test_2 = string(test.rbegin(), test.rend());
-				for (auto itr = test_2.begin(); itr != test_2.end(); ++itr)
+				//push entire "test" token list onto rule stack in reverse order
+				list<Token> List = test;
+				List.reverse();
+				for (auto itr = List.begin(); itr != List.end(); ++itr)
 				{
-					if (*itr == space)
-					{
-						//do nothing
-					}
+					Token Pushme(itr->getString(), itr->getTokenType());
+					_ruleStack.push(Pushme);
+					test_2 = itr->getString();
+					/*
 					else
 					{
 						string s;
 						s += *itr;
-						_ruleStack.push(s);
+						Token s2(s, TokenType::UNDEFINED);
+						_ruleStack.push(s2);
 						cout << *itr << endl;
 					}
+					*/
 				}
 			}
 			else
 			{
 				errorString += "Error when trying to find rule [ ";
-				errorString += _ruleStack.top();
+				errorString += _ruleStack.top().getString();
 				errorString += " , ";
 				errorString += _currentToken->getString();
 				errorString += " ]";
@@ -80,7 +89,7 @@ void LL1Parser::PrintErrors()
 }
 
 //could make this return true if the value was already assigned if needed later
-bool LL1Parser::AddRule(string _key, string _input, string _result)
+bool LL1Parser::AddRule(string _key, string _input, list<Token> _result)
 {
 	pair<string, string> _pair; 
 	_pair.first = _key;
@@ -89,7 +98,7 @@ bool LL1Parser::AddRule(string _key, string _input, string _result)
 	return false;
 }
 
-string LL1Parser::GetRule(string _key, string _input)
+list<Token> LL1Parser::GetRule(string _key, string _input)
 {
 	pair<string, string> _pair;
 	_pair.first = _key;
@@ -124,11 +133,113 @@ S - > a S a
 S - > b S b
 S - > c
 */
+/*
 void LL1Parser::buildRuleTable()
 {
-	_ruleStack.push("$");
-	_ruleStack.push("S");
-	AddRule("S", "a", "a S a");
-	AddRule("S", "b", "b S b");
-	AddRule("S", "c", "c");
+	Token DS("$", TokenType::UNDEFINED);
+	Token S("S", TokenType::UNDEFINED);
+	_ruleStack.push(DS);
+	_ruleStack.push(S);
+
+
+	list<Token> Sa;
+	list<Token> Sb;
+	list<Token> Sc;
+
+	Token a("a", TokenType::UNDEFINED);
+	//Token S("S", TokenType::UNDEFINED);
+	Token b("b", TokenType::UNDEFINED);
+	Token c("c", TokenType::UNDEFINED);
+
+	Sa.push_front(a);
+	Sa.push_front(S);
+	Sa.push_front(a);
+
+	Sb.push_front(b);
+	Sb.push_front(S);
+	Sb.push_front(b);
+
+	Sc.push_front(c);
+
+	AddRule("S", "a", Sa);
+	AddRule("S", "b", Sb);
+	AddRule("S", "c", Sc);
+}
+*/
+/*
+For language set:
+S->Line NUM NUM NUM NUM S
+S->Circle NUM NUM NUM S
+S->Pixel NUM NUM S
+S->Rect NUM NUM NUM NUM S
+S->Define ID S end S
+S->ID S
+S->lambda
+*/
+
+void LL1Parser::buildRuleTable()
+{
+	Token DS("$", TokenType::UNDEFINED);
+	Token S("S", TokenType::UNDEFINED);
+	_ruleStack.push(DS);
+	_ruleStack.push(S);
+
+
+	list<Token> SLine;
+	list<Token> SCircle;
+	list<Token> SPixel;
+	list<Token> SRect;
+	list<Token> SDefine;
+	list<Token> SID;
+	//might somehow need a rule for lambda, not exactly sure how that would be done
+
+	Token Num("NUM", TokenType::NUMCONSTANT);
+	Token Line("Line", TokenType::UNDEFINED);
+	Token Circle("Circle", TokenType::UNDEFINED);
+	Token Pixel("Pixel", TokenType::UNDEFINED);
+	Token Rect("Rect", TokenType::UNDEFINED);
+	Token Define("Define", TokenType::UNDEFINED);
+	Token ID("ID", TokenType::FUNCTION); // not sure if type::FUNCTION is correct here
+	Token End("end", TokenType::UNDEFINED);
+
+	SLine.push_back(Line);			//S->Line NUM NUM NUM NUM S
+	SLine.push_back(Num);
+	SLine.push_back(Num);
+	SLine.push_back(Num);
+	SLine.push_back(Num);
+	SLine.push_back(S);
+
+	SCircle.push_front(Circle);		//S->Circle NUM NUM NUM S
+	SCircle.push_front(Num);
+	SCircle.push_front(Num);
+	SCircle.push_front(Num);
+	SCircle.push_front(S);
+
+	SPixel.push_front(Pixel); 		//S->Pixel NUM NUM S
+	SPixel.push_front(Num);
+	SPixel.push_front(Num);
+	SPixel.push_front(S);
+
+	SRect.push_front(Rect);			//S->Rect NUM NUM NUM NUM S
+	SRect.push_front(Num);
+	SRect.push_front(Num);
+	SRect.push_front(Num);
+	SRect.push_front(Num);
+	SRect.push_front(S);
+
+	SDefine.push_front(Define); 	//S->Define ID S end S
+	SDefine.push_front(ID);
+	SDefine.push_front(S);
+	SDefine.push_front(End);
+	SDefine.push_front(S);
+	
+	SID.push_front(ID);				//S->ID S
+	SID.push_front(S);
+
+	AddRule("S", "Line", SLine);
+	AddRule("S", "Circle", SCircle);
+	AddRule("S", "Pixel", SPixel);
+	AddRule("S", "Rect", SRect);
+	AddRule("S", "Define", SDefine);
+	AddRule("S", "ID", SID);
 }

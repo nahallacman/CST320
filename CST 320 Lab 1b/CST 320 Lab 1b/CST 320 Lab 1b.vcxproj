@@ -28,6 +28,7 @@
     <Text Include="if.txt" />
     <Text Include="input.txt" />
     <Text Include="int.txt" />
+    <Text Include="Language2Test.txt" />
     <Text Include="LegalCVariable.txt" />
     <Text Include="LegalLabel.txt" />
     <Text Include="LegalNumericConstant.txt" />
@@ -48,7 +49,7 @@
     <Text Include="Program10.txt" />
     <Text Include="Program11.txt" />
     <Text Include="Program12.txt" />
-    <Text Include="Program13.txt" />
+    <Text Include="Language1Test.txt" />
     <Text Include="Program2.txt" />
     <Text Include="Program3.txt" />
     <Text Include="Program4.txt" />
