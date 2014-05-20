@@ -39,6 +39,12 @@ bool LL1Parser::Parse()
 			}
 			
 		}
+		else if (_ruleStack.top().getString() == " ")
+		{
+			cout << "lambda at: " << _currentToken->getString() << endl;
+			//FetchNext();
+			_ruleStack.pop();
+		}
 		else
 		{
 			test = GetRule(_ruleStack.top().getString(), _currentToken->getString());
@@ -191,6 +197,9 @@ void LL1Parser::buildRuleTable()
 	list<Token> SRect;
 	list<Token> SDefine;
 	list<Token> SID;
+	list<Token> SDsign;
+	list<Token> SEnd;
+	list<Token> Empty;
 	//might somehow need a rule for lambda, not exactly sure how that would be done
 
 	Token Num("NUM", TokenType::NUMCONSTANT);
@@ -199,8 +208,10 @@ void LL1Parser::buildRuleTable()
 	Token Pixel("Pixel", TokenType::UNDEFINED);
 	Token Rect("Rect", TokenType::UNDEFINED);
 	Token Define("Define", TokenType::UNDEFINED);
-	Token ID("ID", TokenType::FUNCTION); // not sure if type::FUNCTION is correct here
+	Token ID("ID", TokenType::VARIABLE); // not sure if type::FUNCTION is correct here
 	Token End("end", TokenType::UNDEFINED);
+	Token Dsign("$", TokenType::UNDEFINED);
+	Token Space(" ", TokenType::UNDEFINED);
 
 	SLine.push_back(Line);			//S->Line NUM NUM NUM NUM S
 	SLine.push_back(Num);
@@ -209,32 +220,36 @@ void LL1Parser::buildRuleTable()
 	SLine.push_back(Num);
 	SLine.push_back(S);
 
-	SCircle.push_front(Circle);		//S->Circle NUM NUM NUM S
-	SCircle.push_front(Num);
-	SCircle.push_front(Num);
-	SCircle.push_front(Num);
-	SCircle.push_front(S);
+	SCircle.push_back(Circle);		//S->Circle NUM NUM NUM S
+	SCircle.push_back(Num);
+	SCircle.push_back(Num);
+	SCircle.push_back(Num);
+	SCircle.push_back(S);
 
-	SPixel.push_front(Pixel); 		//S->Pixel NUM NUM S
-	SPixel.push_front(Num);
-	SPixel.push_front(Num);
-	SPixel.push_front(S);
+	SPixel.push_back(Pixel); 		//S->Pixel NUM NUM S
+	SPixel.push_back(Num);
+	SPixel.push_back(Num);
+	SPixel.push_back(S);
 
-	SRect.push_front(Rect);			//S->Rect NUM NUM NUM NUM S
-	SRect.push_front(Num);
-	SRect.push_front(Num);
-	SRect.push_front(Num);
-	SRect.push_front(Num);
-	SRect.push_front(S);
+	SRect.push_back(Rect);			//S->Rect NUM NUM NUM NUM S
+	SRect.push_back(Num);
+	SRect.push_back(Num);
+	SRect.push_back(Num);
+	SRect.push_back(Num);
+	SRect.push_back(S);
 
-	SDefine.push_front(Define); 	//S->Define ID S end S
-	SDefine.push_front(ID);
-	SDefine.push_front(S);
-	SDefine.push_front(End);
-	SDefine.push_front(S);
+	SDefine.push_back(Define); 	    //S->Define ID S end S
+	SDefine.push_back(ID);
+	SDefine.push_back(S);
+	SDefine.push_back(End);
+	SDefine.push_back(S);
 	
-	SID.push_front(ID);				//S->ID S
-	SID.push_front(S);
+	SID.push_back(ID);				//S->ID S
+	SID.push_back(S);
+
+	SDsign.push_back(Dsign);
+
+	SEnd.push_back(Space);
 
 	AddRule("S", "Line", SLine);
 	AddRule("S", "Circle", SCircle);
@@ -242,4 +257,6 @@ void LL1Parser::buildRuleTable()
 	AddRule("S", "Rect", SRect);
 	AddRule("S", "Define", SDefine);
 	AddRule("S", "ID", SID);
+	//AddRule("S", "$", SDsign);
+	AddRule("S", "end", SEnd);
 }
