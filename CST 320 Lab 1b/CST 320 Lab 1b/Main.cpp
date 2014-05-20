@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include "Token.h"
 #include "LexicalCheckNode.h"
@@ -7,8 +6,7 @@
 #include "RecursiveParser.h"
 #include <fstream>
 #include <list>
-//using std::ifstream;
-//using std::cin;
+
 using namespace::std;
 
 list<Token> LexicalAnalyzer(char * input_file);

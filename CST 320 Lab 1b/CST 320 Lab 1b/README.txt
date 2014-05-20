@@ -4,9 +4,34 @@ Right click the Project name in the solution explorer and go to properties.
 Under Configuration Properties->C/C++->Preprocessor, add _CRT_SECURE_NO_WARNINGS to the preprocessor definitons. (If you don't do this visual studios complains about strcpy and strncpy)
 
 Program is run simply by debugging. Target program test files are changed in main.cpp line 27.
-The default program is Program12.txt.
+The default program is Language3Test.txt and it works for my subset of my grammar.
+To run the first language test, use Language1Test.txt and in file LL1Parser, comment out the propper buildRuleTable() and uncomment the first buildRuleTable().
+The second language uses Language2Test.txt 
 
 To reach the intended output the program will promt the user to "press any key to continue..." twice. 
+
+A successful parse will show something like:
+Matched a token: int
+Matched a token: a1
+Matched a token: (
+Matched a token: a2
+Matched a token: )
+Matched a token: {
+Matched a token: int
+Matched a token: a
+Matched a token: ;
+Matched a token: }
+Matched a token: $
+Parse succeeded
+Press any key to continue . . .
+
+An unsuccessful parse will show something like:
+Matched a token: int
+Matched a token: a1
+Matched a token: (
+Parse failed
+Error when trying to find rule [ ID , 2 ]
+Press any key to continue . . .
 
 
  -------------------------------------- List of files ---------------------------------------------- 
@@ -14,6 +39,7 @@ Header files:
 DFA.h
 DFAWrapper.h
 LexicalCheckNode.h
+LL1Parser.h
 Preprocessor.h
 RecursiveParser.h
 RecursiveParser_old.h
@@ -33,13 +59,18 @@ Symbol.cpp
 SymbolTable.cpp
 Token.cpp
 
-Test program files:
+Old Test program files:
 Program6.txt
 Program7.txt
 Program8.txt
 Program10.txt
 Program11.txt
 Program12.txt
+
+New Test program files:
+Language1Test.txt
+Language2Text.txt
+Language3Text.txt
 
 DFA files:
 LegalCVariable.txt
@@ -92,136 +123,48 @@ semicolon.txt
 
 --------------------------------------Example input:-------------------------------------------
 
-int test()
+int a1 ( 2 )
 {
-	int a ;
-	a = 2 ;
-	input ( a ) ;
+	int a;
 }
-
-int main() 
-{	
-	int b;
-	b = 1;
-	input ( b ) ;
-} 
 
 --------------------------------------Example output:------------------------------------------
-
  Starting Preprocessor
 Removing Comments --
-int test()
+int a1 ( a2 )
 {
-        int a ;
-        a = 2 ;
-        input ( a ) ;
-}
-int main()
-{
-        int b;
-        b = 1;
-        input ( b ) ;
+        int a;
 }
 Handling preprocessor directives --
-int test()
+int a1 ( a2 )
 {
-        int a ;
-        a = 2 ;
-        input ( a ) ;
-}
-int main()
-{
-        int b;
-        b = 1;
-        input ( b ) ;
+        int a;
 }
 
 --------Begin Symbol Table--------
 ---------End Symbol Table---------
  Starting Lexical Analyzer
 int             Keyword
-test            Identifier
+a1              Identifier
 (               Symbol
+a2              Identifier
 )               Symbol
 {               Symbol
 int             Keyword
 a               Identifier
-;               Symbol
-a               Identifier
-=               Operator
-2               Numeric Constant
-;               Symbol
-input           Keyword
-(               Symbol
-a               Identifier
-)               Symbol
-;               Symbol
-}               Symbol
-int             Keyword
-main            Keyword
-(               Symbol
-)               Symbol
-{               Symbol
-int             Keyword
-b               Identifier
-;               Symbol
-b               Identifier
-=               Operator
-1               Numeric Constant
-;               Symbol
-input           Keyword
-(               Symbol
-b               Identifier
-)               Symbol
 ;               Symbol
 }               Symbol
 Press any key to continue . . .
-Begin stack based rule tree. Printing from the top of the stack.
-Statement
-Statement_Group
-S2
-Primary
-P2
-Primary
-Statement
-Statement_Group
-Identifier_List
-Data_Definition
-Data_Definition_List
-Brackets
-Func_Args
-Function_Definition
-D2
-Definition
-Program
-Statement
-Statement_Group
-S2
-Primary
-P2
-Primary
-Statement
-Statement_Group
-Identifier_List
-Data_Definition
-Data_Definition_List
-Brackets
-Func_Args
-Function_Definition
-Identifier_List
-Data_Definition
-D2
-Definition
-Program
-Start
-End stack based rule tree.
+Matched a token: int
+Matched a token: a1
+Matched a token: (
+Matched a token: a2
+Matched a token: )
+Matched a token: {
+Matched a token: int
+Matched a token: a
+Matched a token: ;
+Matched a token: }
+Matched a token: $
 Parse succeeded
---------Begin Symbol Table--------
-Symbol: a  is a variable a defined as: 2
-Symbol: b  is a variable b defined as: 1
-Symbol: main  is a Function main ( )  defined as: { int b ; b = 1 ; input ( b )
-; }
-Symbol: test  is a Function test ( )  defined as: { int a ; a = 2 ; input ( a )
-; } int
----------End Symbol Table---------
 Press any key to continue . . .
