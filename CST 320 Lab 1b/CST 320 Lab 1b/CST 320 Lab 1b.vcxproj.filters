@@ -189,6 +189,9 @@
     <Text Include="Language2Test.txt">
       <Filter>Resource Files\New Test Files\LL1 Test Files</Filter>
     </Text>
+    <Text Include="Language3Test.txt">
+      <Filter>Resource Files\New Test Files\LL1 Test Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DFA.cpp">

@@ -26,7 +26,7 @@ int main()
 	SymbolTable the_symbolTable;
 
 	cout << " Starting Preprocessor " << endl;
-	Preprocessor pp("Language2Test.txt", the_symbolTable);
+	Preprocessor pp("Language3Test.txt", the_symbolTable);
 	the_symbolTable = pp.getSymbolTable();
 
 	cout << " Starting Lexical Analyzer " << endl;

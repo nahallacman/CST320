@@ -29,6 +29,7 @@
     <Text Include="input.txt" />
     <Text Include="int.txt" />
     <Text Include="Language2Test.txt" />
+    <Text Include="Language3Test.txt" />
     <Text Include="LegalCVariable.txt" />
     <Text Include="LegalLabel.txt" />
     <Text Include="LegalNumericConstant.txt" />

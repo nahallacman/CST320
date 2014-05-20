@@ -58,7 +58,7 @@ bool LL1Parser::Parse()
 				{
 					Token Pushme(itr->getString(), itr->getTokenType());
 					_ruleStack.push(Pushme);
-					test_2 = itr->getString();
+					//test_2 = itr->getString();
 					/*
 					else
 					{
@@ -182,7 +182,7 @@ S->Define ID S end S
 S->ID S
 S->lambda
 */
-
+/*
 void LL1Parser::buildRuleTable()
 {
 	Token DS("$", TokenType::UNDEFINED);
@@ -259,4 +259,120 @@ void LL1Parser::buildRuleTable()
 	AddRule("S", "ID", SID);
 	//AddRule("S", "$", SDsign);
 	AddRule("S", "end", SEnd);
+}
+*/
+
+/*
+modified rules: FUNCTION_DEFINITION => IDENTIFIER '(' IDENTIFIER ')' '{' DATA_DEFINITION_LIST '}
+
+DATA_DEFINITION_LIST => ‘int’ DATA_DEFINITION DATA_DEFINITION_LIST | lambda
+
+DATA_DEFINITION => IDENTIFIER IDENTIFIER_LIST ';'
+
+IDENTIFIER_LIST => , IDENTIFIER IDENTIFIER_LIST | lambda
+*/
+
+void LL1Parser::buildRuleTable()
+{
+	Token DS("$", TokenType::UNDEFINED);
+	Token F_D("FUNCTION_DEFINITION", TokenType::UNDEFINED);
+	_ruleStack.push(DS);
+	_ruleStack.push(F_D);
+
+
+	list<Token> FUNC;
+	list<Token> DDL;
+	list<Token> DD;
+	list<Token> IDlist;
+	//list<Token> ID2;
+	list<Token> Lambda;
+	list<Token> SEMICOLON;
+
+	/*
+	list<Token> SCircle;
+	list<Token> SPixel;
+	list<Token> SRect;
+	list<Token> SDefine;
+	list<Token> SID;
+	list<Token> SDsign;
+	list<Token> SEnd;
+	list<Token> Empty;
+	*/
+	//might somehow need a rule for lambda, not exactly sure how that would be done
+
+	/*
+	Token Func("FUNCTION_DEFINITION", TokenType::UNDEFINED);
+	Token Line("Line", TokenType::UNDEFINED);
+	Token Circle("Circle", TokenType::UNDEFINED);
+	Token Pixel("Pixel", TokenType::UNDEFINED);
+	Token Rect("Rect", TokenType::UNDEFINED);
+	Token Define("Define", TokenType::UNDEFINED);
+	Token End("end", TokenType::UNDEFINED);
+	Token Dsign("$", TokenType::UNDEFINED);
+	*/
+
+	Token Space(" ", TokenType::UNDEFINED);
+	
+
+	Token ID("ID", TokenType::VARIABLE);
+	Token OpenParen("(", TokenType::UNDEFINED);
+	Token ClosedParen(")", TokenType::UNDEFINED);
+	Token Func_Args("FUNC_ARGS", TokenType::UNDEFINED);
+	Token OpenBracket("{", TokenType::UNDEFINED);
+	Token DataDefinitionList("DATA_DEFINITION_LIST", TokenType::UNDEFINED);
+	Token ClosedBracket("}", TokenType::UNDEFINED);
+
+	Token IdentifierList("IDENTIFIER_LIST", TokenType::UNDEFINED);
+
+	Token Int("int", TokenType::UNDEFINED);
+	Token DataDefinition("DATA_DEFINITION", TokenType::VARIABLE);
+
+	Token Semicolon(";", TokenType::UNDEFINED);
+
+	//Token id2("ID2", TokenType::UNDEFINED);
+
+	Token Comma(",", TokenType::UNDEFINED);
+
+	FUNC.push_back(Int);
+	FUNC.push_back(ID);						//FUNCTION_DEFINITION => 'int' IDENTIFIER '(' IDENTIFIER ')' '{' DATA_DEFINITION_LIST '}
+	FUNC.push_back(OpenParen);
+	FUNC.push_back(ID);
+	FUNC.push_back(ClosedParen);
+	FUNC.push_back(OpenBracket);
+	FUNC.push_back(DataDefinitionList);
+	FUNC.push_back(ClosedBracket);
+
+	DDL.push_back(Int); 					//DATA_DEFINITION_LIST => ‘int’ DATA_DEFINITION DATA_DEFINITION_LIST | lambda
+	DDL.push_back(DataDefinition);
+	DDL.push_back(DataDefinitionList);
+
+	DD.push_back(ID);						//DATA_DEFINITION => IDENTIFIER IDENTIFIER_LIST ';' 
+	DD.push_back(IdentifierList);
+	DD.push_back(Semicolon);
+
+	IDlist.push_back(Comma); 				//IDENTIFIER_LIST => , IDENTIFIER IDENTIFIER_LIST | lambda
+	IDlist.push_back(ID);
+	IDlist.push_back(IdentifierList);
+
+	//ID2.push_back(Comma);					
+	//ID2.push_back(IdentifierList);
+
+	Lambda.push_back(Space);
+
+	SEMICOLON.push_back(Semicolon);
+	//SDsign.push_back(Dsign);
+
+	//SEnd.push_back(Space);
+
+	AddRule("FUNCTION_DEFINITION", "int", FUNC);
+	AddRule("DATA_DEFINITION_LIST", "int", DDL);
+	AddRule("DATA_DEFINITION_LIST", "}", Lambda);
+	AddRule("DATA_DEFINITION_LIST", ";", SEMICOLON);
+	AddRule("DATA_DEFINITION", "ID", DD);
+	AddRule("IDENTIFIER_LIST", ",", IDlist);
+	AddRule("IDENTIFIER_LIST", ";", Lambda);
+	//AddRule("ID2", ",", ID2);
+	//AddRule("ID2", ";", SPACE);
+	//AddRule("S", "$", SDsign);
+	//AddRule("S", "end", SEnd);
 }

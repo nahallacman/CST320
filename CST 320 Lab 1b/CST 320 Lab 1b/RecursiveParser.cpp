@@ -88,7 +88,6 @@ bool RecursiveParser::Start()
 }
 
 /*
- 
 PROGRAM = DEFINITION PROGRAM
      	| DEFINITION
      	| lambda
@@ -116,8 +115,7 @@ PROGRAM = DEFINITION PROGRAM
  }
 
  /*
-DEFINITION = ‘int’ D2
-     	| ‘int’ D2                     	
+DEFINITION = ‘int’ D2     	
  */
 
  bool RecursiveParser::Definition()
