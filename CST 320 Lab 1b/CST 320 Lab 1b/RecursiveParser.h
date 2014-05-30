@@ -47,16 +47,16 @@ private:
 	bool P2(list<Token>::iterator _StatementStart);
 
 
-	//bool m_RunTime;
-	bool _Done;
+	bool m_RunTime;
+	bool m_Done;
 
-	list<string> _errors;
+	list<string> m_errors;
 
-	list<Token> _tokens;
-	list<Token>::iterator _currentToken;
+	list<Token> m_tokens;
+	list<Token>::iterator m_currentToken;
 	//list<Token>::iterator _endToken;
 
-	stack<string> _ruleTree;
+	stack<string> m_ruleTree;
 
 	SymbolTable m_SymbolTable;
 };
