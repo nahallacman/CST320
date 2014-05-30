@@ -1,5 +1,15 @@
-int a1 ( a2 )
+int test()
 {
-	int a;
+	int a ;
+	a = 2 ;
+	input ( a ) ;
+	output ( a ) ;
 }
+int main() 
+{	
+	int b;
+	b = 1;
+	input ( b ) ;
+	test();
+} 
 

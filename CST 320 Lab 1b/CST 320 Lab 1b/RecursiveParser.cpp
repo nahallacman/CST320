@@ -214,7 +214,8 @@ bool RecursiveParser::Data_Definition()
 				{
 					//variable definition starts here
 					Token var_def(x->getString(), TokenType::VARIABLE, false);
-					m_SymbolTable.addSymbol(x->getString(), var_def);
+					//m_SymbolTable.addSymbol(x->getString(), var_def);
+					DefineVariable(x->getString(), var_def);
 				}
 				else
 				{
@@ -689,13 +690,20 @@ bool RecursiveParser::Statement()
 			FetchNext();
 			if (_currentToken->getTokenType() == TokenType::VARIABLE) // check for a variable
 			{
-				//the variable here will eventually need to be checked if it is defined or declared
+				//define the variable
+				Token definedAs(_currentToken->getString(), _currentToken->getTokenType() );
 				FetchNext();
 				if (_currentToken->getString() == ")")	//')'
 				{
 					FetchNext();
 					if (_currentToken->getString() == ";")		// ';'				
 					{
+						int a;
+						cout << "Prompt::Input(" << definedAs.getString() << "):";
+						cin >> a;
+						string b = std::to_string(a);
+						definedAs.setValue(b);
+						DefineVariable(definedAs.getString(), definedAs);
 						FetchNext();
 						return true; // completed input statement
 					}
@@ -729,8 +737,52 @@ bool RecursiveParser::Statement()
 	}
 	else if (_currentToken->getString() == "output") // output '(' OUTPUT ')' ';'
 	{
-		_errors.push_back("output statements not yet implimented");
-		return false;
+		FetchNext();
+		if (_currentToken->getString() == "(")		// '('
+		{
+			FetchNext();
+			if (_currentToken->getTokenType() == TokenType::VARIABLE) // check for a variable
+			{
+				Token outputMe(_currentToken->getString(), _currentToken->getTokenType()); //get variable for output
+				FetchNext();
+				if (_currentToken->getString() == ")")	//')'
+				{
+					FetchNext();
+					if (_currentToken->getString() == ";")		// ';'				
+					{
+						cout << "Output(" << outputMe.getString() << "): " << m_SymbolTable.GetToken(outputMe.getString()).getValue() << endl;
+						FetchNext();
+						return true; // completed output statement
+					}
+					else
+					{
+						_errors.push_back("no ; after an output statement");
+						_currentToken = _StatementStart;
+						return false;
+					}
+				}
+				else
+				{
+					_errors.push_back("no matching ) after an output statement");
+					_currentToken = _StatementStart;
+					return false;
+				}
+			}
+			else
+			{
+				_errors.push_back("no variable in output statement");
+				_currentToken = _StatementStart;
+				return false;
+			}
+		}
+		else
+		{
+			_errors.push_back("no ( after an output statement");
+			_currentToken = _StatementStart;
+			return false;
+		}
+		//_errors.push_back("output statements not yet implimented");
+		//return false;
 	}
 	else if (_currentToken->getString() == "return") // 'return' RETURN ';' |
 	{
@@ -992,6 +1044,7 @@ bool RecursiveParser::P2(list<Token>::iterator _StatementStart)
 		FetchNext();
 		if (_currentToken->getString() == ")")
 		{
+			// A function call was just made. Need to replace the function call with the code it represents.
 			FetchNext();//possibly, testing this
 			return true;
 		}
@@ -1044,7 +1097,8 @@ bool RecursiveParser::P2(list<Token>::iterator _StatementStart)
 			}
 			//bodyStr += _currentToken->getString();
 			Token equals_body(_StatementStart->getString(), TokenType::VARIABLE, true, bodyStr);
-			m_SymbolTable.addSymbol(_StatementStart->getString(), equals_body);
+			//m_SymbolTable.addSymbol(_StatementStart->getString(), equals_body);
+			DefineVariable(_StatementStart->getString(), equals_body);
 
 
 
@@ -1077,3 +1131,15 @@ letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
 digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 */
 
+bool RecursiveParser::DefineVariable(string key, Token token)
+{
+	bool retval = false;
+	if (!m_SymbolTable.checkSymbolTable(key))
+	{
+		cout << "Prompt::Variable: " << key << " already defined as " << m_SymbolTable.GetToken(key).getValue() << endl;
+	}
+	cout << "Prompt::Variable: " << key << " now defined as " << token.getValue() << endl;
+	token.setIsDefined(true);
+	m_SymbolTable.addSymbol(key, token);
+	return retval;
+}

@@ -22,7 +22,7 @@ private:
 	void BackOne();
 	void Print(string _print);
 	
-
+	bool DefineVariable(string key, Token token);
 	
 	bool Program();
 	bool Start();
@@ -47,7 +47,7 @@ private:
 	bool P2(list<Token>::iterator _StatementStart);
 
 
-
+	//bool m_RunTime;
 	bool _Done;
 
 	list<string> _errors;

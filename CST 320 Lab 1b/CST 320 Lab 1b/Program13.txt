@@ -1,0 +1,16 @@
+
+int test()
+{
+	int a ;
+	a = 2 ;
+	input ( a ) ;
+	output ( a ) ;
+}
+
+int main() 
+{	
+	int b;
+	b = 1;
+	input ( b ) ;
+	test();
+} 

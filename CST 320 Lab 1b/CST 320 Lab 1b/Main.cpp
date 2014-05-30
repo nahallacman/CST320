@@ -24,14 +24,15 @@ int main()
 	SymbolTable the_symbolTable;
 
 	cout << " Starting Preprocessor " << endl;
-	Preprocessor pp("Language3Test.txt", the_symbolTable);
+	Preprocessor pp("Program13.txt", the_symbolTable);
 	the_symbolTable = pp.getSymbolTable();
 
 	cout << " Starting Lexical Analyzer " << endl;
 	tokens = LexicalAnalyzer("Program.ppd");
 
 	tokens = DefineReplacement(tokens, pp.getSymbols());
-	LL1Parser LL1P(tokens);
+	// if you want to use the ll1 parser
+	/*LL1Parser LL1P(tokens);
 	if (LL1P.Parse())
 	{
 		cout << "Parse succeeded" << endl;
@@ -41,7 +42,8 @@ int main()
 		cout << "Parse failed" << endl;
 		LL1P.PrintErrors();
 	}
-	/*
+	*/
+	//if you want to use the recursive decent parser
 	RecursiveParser Parser(tokens, the_symbolTable);
 	if(Parser.Parse())
 	{
@@ -53,7 +55,7 @@ int main()
 		cout << "Parse failed" << endl;
 		Parser.PrintErrors();
 	}
-	*/
+	
 	system("pause");
 	return 0;
 };
