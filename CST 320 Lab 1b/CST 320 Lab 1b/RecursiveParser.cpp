@@ -3,18 +3,35 @@
 RecursiveParser::RecursiveParser(list<Token> tokens, SymbolTable _symbolTable) :m_tokens(tokens), m_SymbolTable(_symbolTable)
 {
 	m_currentToken = m_tokens.begin();
+	m_Processing = true;
 	//_endToken = m_tokens.end();
+}
+
+bool RecursiveParser::Run()
+{
+	m_Processing = false;
+	m_Done = false;
+	m_tokens.erase(m_tokens.begin(), m_tokens.end());
+	//m_SymbolTable.ClearSymbolTableBesidesFunctions();
+
+	m_tokens =  m_SymbolTable.GetFunctionDefinion("main");
+	m_currentToken = m_tokens.begin();
+	if (Brackets())
+	{
+		cout << "Begin stack based rule tree. Printing from the top of the stack." << endl;
+		while (!m_ruleTree.empty())
+		{
+			cout << m_ruleTree.top() << endl;
+			m_ruleTree.pop();
+		}
+		cout << "End stack based rule tree." << endl;
+		return true;
+	}
+	else return false;
 }
 
 bool RecursiveParser::Parse()
 {
-	/*
-	if(!Program())
-	{
-	cout << "Program failed to compile\n";
-	//PrintErrors();
-	}
-	*/
 	if (Start())
 	{
 		cout << "Begin stack based rule tree. Printing from the top of the stack." << endl;
@@ -347,13 +364,15 @@ bool RecursiveParser::Function_Definition()
 				//function content here
 				if (Brackets())
 				{
+					list<Token> _temp_list;
 					for (list<Token>::iterator x = fun_body; x != m_currentToken; x++)
 					{
 						bodyStr += x->getString();
 						bodyStr += " ";
+						_temp_list.push_back(*x);
 					}
 					bodyStr += m_currentToken->getString();
-					Token fun_body(headerStr, TokenType::FUNCTION, true, bodyStr);
+					Token fun_body(headerStr, TokenType::FUNCTION, true, bodyStr, _temp_list);
 					m_SymbolTable.addSymbol(_functionHeader->getString(), fun_body);
 
 					return true;
@@ -698,12 +717,15 @@ bool RecursiveParser::Statement()
 					FetchNext();
 					if (m_currentToken->getString() == ";")		// ';'				
 					{
-						int a;
-						cout << "Prompt::Input(" << definedAs.getString() << "):";
-						cin >> a;
-						string b = std::to_string(a);
-						definedAs.setValue(b);
-						DefineVariable(definedAs.getString(), definedAs);
+						if (m_Processing == false)
+						{
+							int a;
+							cout << "Prompt::Input(" << definedAs.getString() << "):";
+							cin >> a;
+							string b = std::to_string(a);
+							definedAs.setValue(b);
+							DefineVariable(definedAs.getString(), definedAs);
+						}
 						FetchNext();
 						return true; // completed input statement
 					}
@@ -750,7 +772,10 @@ bool RecursiveParser::Statement()
 					FetchNext();
 					if (m_currentToken->getString() == ";")		// ';'				
 					{
-						cout << "Output(" << outputMe.getString() << "): " << m_SymbolTable.GetToken(outputMe.getString()).getValue() << endl;
+						if (m_Processing == false)
+						{
+							cout << "Output(" << outputMe.getString() << "): " << m_SymbolTable.GetToken(outputMe.getString()).getValue() << endl;
+						}
 						FetchNext();
 						return true; // completed output statement
 					}

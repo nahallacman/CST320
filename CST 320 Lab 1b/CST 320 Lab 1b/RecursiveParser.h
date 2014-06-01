@@ -14,6 +14,7 @@ class RecursiveParser
 public:
 	RecursiveParser(list<Token> tokens, SymbolTable _symbolTable);
 	bool Parse();
+	bool Run();
 	void PrintErrors();
 	void PrintSymbolTable();
 
@@ -47,7 +48,7 @@ private:
 	bool P2(list<Token>::iterator _StatementStart);
 
 
-	bool m_RunTime;
+	bool m_Processing;
 	bool m_Done;
 
 	list<string> m_errors;

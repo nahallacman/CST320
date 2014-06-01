@@ -22,6 +22,11 @@ Token::Token(string key, TokenType type, bool isDefined, string value) : m_key(k
 
 }
 
+Token::Token(string key, TokenType type, bool isDefined, string value, list<Token> _Tvalue) : m_key(key), m_type(type), m_isDefined(isDefined), m_value(value), m_Tokens(_Tvalue)
+{
+
+}
+
 TokenType Token::getTokenType()
 {
 	return m_type;
@@ -54,4 +59,9 @@ void Token::setValue(string value)
 string Token::getValue()
 {
 	return m_value;
+}
+
+list<Token> Token::getTokenList()
+{
+	return m_Tokens;
 }

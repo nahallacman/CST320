@@ -90,3 +90,21 @@ Token SymbolTable::GetToken(string key)
 {
 	return m_SymbolTable[key];
 }
+
+list<Token> SymbolTable::GetFunctionDefinion(string key)
+{
+	return m_SymbolTable[key].getTokenList();
+}
+
+/*
+void SymbolTable::ClearSymbolTableBesidesFunctions()
+{
+	for (auto itr = m_SymbolTable.begin(); itr != m_SymbolTable.end(); ++itr)
+	{
+		if (itr->second.getTokenType() != TokenType::FUNCTION)
+		{
+			m_SymbolTable.erase(itr->first);
+		}
+	}
+}
+*/

@@ -19,8 +19,13 @@ public:
 	void Display(string key, Token print);
 	Token GetToken(string key);
 
+	//void addFunction(string key, list<Token> _funcBody);
+	list<Token> GetFunctionDefinion(string key);
+	//void ClearSymbolTableBesidesFunctions();
+
 private:
 	map<string,Token> m_SymbolTable;
+	//map<string, list<Token> > m_FunctionTable;
 };
 
 #endif

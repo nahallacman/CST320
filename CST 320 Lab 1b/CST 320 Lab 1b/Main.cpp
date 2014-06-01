@@ -49,6 +49,16 @@ int main()
 	{
 		cout << "Parse succeeded" << endl;
 		Parser.PrintSymbolTable();
+		if (Parser.Run())
+		{
+			cout << "Run succeeded" << endl;
+			Parser.PrintSymbolTable();
+		}
+		else
+		{
+			cout << "Run failed" << endl;
+			Parser.PrintErrors();
+		}
 	}
 	else
 	{
