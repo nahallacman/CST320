@@ -21,7 +21,7 @@ public:
 
 	//void addFunction(string key, list<Token> _funcBody);
 	list<Token> GetFunctionDefinion(string key);
-	//void ClearSymbolTableBesidesFunctions();
+	void ClearSymbolTableBesidesFunctions();
 
 private:
 	map<string,Token> m_SymbolTable;

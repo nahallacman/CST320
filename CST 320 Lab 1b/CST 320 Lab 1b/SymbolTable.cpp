@@ -96,15 +96,17 @@ list<Token> SymbolTable::GetFunctionDefinion(string key)
 	return m_SymbolTable[key].getTokenList();
 }
 
-/*
 void SymbolTable::ClearSymbolTableBesidesFunctions()
 {
-	for (auto itr = m_SymbolTable.begin(); itr != m_SymbolTable.end(); ++itr)
+	map<string, Token>::iterator itr = m_SymbolTable.begin();
+	map<string, Token>::iterator itr2 = itr;
+	while( itr != m_SymbolTable.end() )
 	{
-		if (itr->second.getTokenType() != TokenType::FUNCTION)
+		itr2 = itr;
+		itr++;
+		if (itr2->second.getTokenType() != TokenType::FUNCTION)
 		{
-			m_SymbolTable.erase(itr->first);
+			m_SymbolTable.erase(itr2->first);
 		}
 	}
 }
-*/

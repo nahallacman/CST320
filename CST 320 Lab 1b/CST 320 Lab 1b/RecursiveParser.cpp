@@ -12,10 +12,11 @@ bool RecursiveParser::Run()
 	m_Processing = false;
 	m_Done = false;
 	m_tokens.erase(m_tokens.begin(), m_tokens.end());
-	//m_SymbolTable.ClearSymbolTableBesidesFunctions();
+	m_SymbolTable.ClearSymbolTableBesidesFunctions();
 
 	m_tokens =  m_SymbolTable.GetFunctionDefinion("main");
 	m_currentToken = m_tokens.begin();
+	//if (Start())
 	if (Brackets())
 	{
 		cout << "Begin stack based rule tree. Printing from the top of the stack." << endl;
@@ -365,13 +366,18 @@ bool RecursiveParser::Function_Definition()
 				if (Brackets())
 				{
 					list<Token> _temp_list;
-					for (list<Token>::iterator x = fun_body; x != m_currentToken; x++)
+					for (list<Token>::iterator x = fun_body; x != m_currentToken; ++x)
 					{
 						bodyStr += x->getString();
 						bodyStr += " ";
 						_temp_list.push_back(*x);
 					}
-					bodyStr += m_currentToken->getString();
+					if (m_currentToken->getString() == "}")
+					{
+						bodyStr += "}";
+						_temp_list.push_back(*m_currentToken);
+					}
+					//bodyStr += m_currentToken->getString();
 					Token fun_body(headerStr, TokenType::FUNCTION, true, bodyStr, _temp_list);
 					m_SymbolTable.addSymbol(_functionHeader->getString(), fun_body);
 
