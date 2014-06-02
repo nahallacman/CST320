@@ -48,18 +48,24 @@ private:
 	bool P2(list<Token>::iterator _StatementStart);
 
 
+	Token FunctionCall(Token _FuncName);
+
+	int m_cursorLocation;
+
 	bool m_Processing;
 	bool m_Done;
 
 	list<string> m_errors;
 
 	list<Token> m_tokens;
+	list<Token> _original_m_tokens;
+
 	list<Token>::iterator m_currentToken;
-	//list<Token>::iterator _endToken;
 
 	stack<string> m_ruleTree;
 
 	SymbolTable m_SymbolTable;
+
 };
 
 #endif

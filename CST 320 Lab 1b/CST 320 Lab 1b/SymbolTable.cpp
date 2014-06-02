@@ -91,7 +91,7 @@ Token SymbolTable::GetToken(string key)
 	return m_SymbolTable[key];
 }
 
-list<Token> SymbolTable::GetFunctionDefinion(string key)
+list<Token> SymbolTable::GetFunctionDefinition(string key)
 {
 	return m_SymbolTable[key].getTokenList();
 }

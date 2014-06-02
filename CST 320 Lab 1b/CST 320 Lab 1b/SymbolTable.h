@@ -20,7 +20,7 @@ public:
 	Token GetToken(string key);
 
 	//void addFunction(string key, list<Token> _funcBody);
-	list<Token> GetFunctionDefinion(string key);
+	list<Token> GetFunctionDefinition(string key);
 	void ClearSymbolTableBesidesFunctions();
 
 private:

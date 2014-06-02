@@ -2,19 +2,22 @@
 
 RecursiveParser::RecursiveParser(list<Token> tokens, SymbolTable _symbolTable) :m_tokens(tokens), m_SymbolTable(_symbolTable)
 {
+	m_cursorLocation = 0;
 	m_currentToken = m_tokens.begin();
 	m_Processing = true;
+	_original_m_tokens = m_tokens;
 	//_endToken = m_tokens.end();
 }
 
 bool RecursiveParser::Run()
 {
+	m_cursorLocation = 0; // this is a maybe, testing this line
 	m_Processing = false;
 	m_Done = false;
 	m_tokens.erase(m_tokens.begin(), m_tokens.end());
 	m_SymbolTable.ClearSymbolTableBesidesFunctions();
 
-	m_tokens =  m_SymbolTable.GetFunctionDefinion("main");
+	m_tokens = m_SymbolTable.GetFunctionDefinition("main");
 	m_currentToken = m_tokens.begin();
 	//if (Start())
 	if (Brackets())
@@ -64,6 +67,7 @@ void RecursiveParser::FetchNext()
 	if (m_currentToken != m_tokens.end())
 	{
 		m_Done = false;
+		++m_cursorLocation;
 		//++m_currentToken;
 	}
 	else
@@ -817,7 +821,7 @@ bool RecursiveParser::Statement()
 	}
 	else if (m_currentToken->getString() == "return") // 'return' RETURN ';' |
 	{
-		FetchNext();
+		FetchNext(); //here is where I would save the return value for that level when I change the symbol table structure
 		Return();
 		if (m_currentToken->getString() == ";")
 		{
@@ -1076,6 +1080,11 @@ bool RecursiveParser::P2(list<Token>::iterator _StatementStart)
 		if (m_currentToken->getString() == ")")
 		{
 			// A function call was just made. Need to replace the function call with the code it represents.
+			// take a range of tokens for the function call itself, process the function call (with maybe brackets()?) then replace the function call with the return value. If there is no return value, just check the function call for correct code, the values won't matter in the end.
+			if (m_Processing == false)		//only do it for the actual run, not for the code evaluation and saving.
+			{
+				FunctionCall(*_StatementStart);
+			}
 			FetchNext();//possibly, testing this
 			return true;
 		}
@@ -1172,5 +1181,37 @@ bool RecursiveParser::DefineVariable(string key, Token token)
 	cout << "Prompt::Variable: " << key << " now defined as " << token.getValue() << endl;
 	token.setIsDefined(true);
 	m_SymbolTable.addSymbol(key, token);
+	return retval;
+}
+
+Token RecursiveParser::FunctionCall(Token _FuncName)
+{
+	
+	//save a list of tokens 
+	_original_m_tokens = m_tokens;
+	//and a count of where we were
+	int _original_m_cursorLocation = m_cursorLocation;
+	//get the fucntion definition
+	m_tokens = m_SymbolTable.GetFunctionDefinition(_FuncName.getString());
+	//move the token iterator to the beginning of the function definition
+	m_currentToken = m_tokens.begin();
+	m_cursorLocation = 0;
+	//I might possibly want to increase the symbol table depth at this point. "depth" could be achieved by manipulating the symbol table.
+	//level 0 is reserved for globals and function definitions, level 1 is "main", level 2 is a function call foo() from within main(), level 3 is a function call foo2() from within foo(), ect.
+	Brackets();
+	// I need a way to handle return values at this point
+	// that could be accomplished by a function that reduces the symbol table depth then takes the last found "return" value if it was defined. If it was not defined for that level, don't bother returning anything.
+
+	//after the function is dealt with, return the tokens and iterators
+	m_tokens = _original_m_tokens;
+	m_currentToken = m_tokens.begin();
+	m_cursorLocation = 0;
+	for (int i = 1; i < _original_m_cursorLocation; i++)
+	{
+		FetchNext();
+	}
+	
+
+	Token retval;
 	return retval;
 }
