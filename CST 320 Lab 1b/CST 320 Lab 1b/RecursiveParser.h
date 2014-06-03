@@ -45,10 +45,13 @@ private:
 	bool Expression();
 	bool Unary_Expression();
 	bool Primary();
-	bool P2(list<Token>::iterator _StatementStart);
+	//bool P2(list<Token>::iterator _StatementStart);
+	bool P2(int _StatementStart);
 
 
 	Token FunctionCall(Token _FuncName);
+
+	void MoveCurrentToken(int _numToMove);
 
 	int m_cursorLocation;
 
@@ -65,6 +68,8 @@ private:
 	stack<string> m_ruleTree;
 
 	SymbolTable m_SymbolTable;
+
+	int m_currentRunLevel;
 
 };
 
