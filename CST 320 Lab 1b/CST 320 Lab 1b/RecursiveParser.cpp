@@ -12,6 +12,7 @@ RecursiveParser::RecursiveParser(list<Token> tokens, SymbolTable _symbolTable) :
 
 bool RecursiveParser::Run()
 {
+	m_currentRunLevel = 1;
 	m_cursorLocation = 0; // this is a maybe, testing this line
 	m_Processing = false;
 	m_Done = false;
@@ -335,21 +336,21 @@ bool RecursiveParser::Function_Definition()
 	{
 		//check the variable to see if it already used. if it is not in the symboltable then add it to the symbol table as a type function
 		//if (m_SymbolTable.checkSymbolTable(m_currentToken->getString()))
-		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel))
+		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel)) // make sure anywhere you are checking for a function the run level has to be 0
 		{
 			Token fun_def(m_currentToken->getString(), TokenType::FUNCTION, false);
 			//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
-			m_SymbolTable.addSymbolLevel(m_currentToken->getString(), m_currentRunLevel, fun_def);
+			m_SymbolTable.addSymbolLevel(m_currentToken->getString(), 0, fun_def);
 		}
 		else
 		{
 			string error;
 			error += "Symbol ";
 			//error += m_SymbolTable.GetToken(m_currentToken->getString()).getString();
-			error += m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getString();
+			error += m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getString();
 			error += " has already been defined as: ";
 			//error += m_SymbolTable.GetToken(m_currentToken->getString()).getValue();
-			error += m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getValue();
+			error += m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getValue();
 			m_errors.push_back(error);
 		}
 		//begin function declaration
@@ -395,9 +396,8 @@ bool RecursiveParser::Function_Definition()
 					}
 					//bodyStr += m_currentToken->getString();
 					Token fun_body(headerStr, TokenType::FUNCTION, true, bodyStr, _temp_list);
-					//m_SymbolTable.addSymbol(_functionHeader->getString(), fun_body);
-					m_SymbolTable.addSymbolLevel(_functionHeader->getString(), m_currentRunLevel, fun_body);
-
+					//m_SymbolTable.addSymbolLevel(_functionHeader->getString(), m_currentRunLevel, fun_body);
+					m_SymbolTable.addSymbolLevel(_functionHeader->getString(), 0, fun_body);
 					return true;
 				}
 				else
@@ -1040,7 +1040,8 @@ bool RecursiveParser::Primary()
 	{
 		//check if variable has been declared AND defined. If it is, move on. If it isn't, error message and return false;
 		//if (m_SymbolTable.checkSymbolTable(m_currentToken->getString()))
-		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel))
+		//if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel) || m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), 0))
+		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel) == true && m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), 0) == true)
 		{
 			//variable hasn't been declared yet
 			string error;
@@ -1058,13 +1059,20 @@ bool RecursiveParser::Primary()
 			//check if it is defined
 			
 			//if (m_SymbolTable.GetToken(m_currentToken->getString()).getIsDefined())
-			if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getIsDefined())
+			if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getIsDefined()) // variable defined at this run level
 			{
 				//list<Token>::iterator _IdentifierStart = m_currentToken;
 				int _tokenLocation = m_cursorLocation;
 				//it is defined! when building the final project, this might be where you extract the value for use
 				FetchNext();
 				//return P2(_IdentifierStart);
+				return P2(_tokenLocation);
+			}
+			else if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getIsDefined()) // global variable or functions
+			{
+				int _tokenLocation = m_cursorLocation;
+				//it is defined! when building the final project, this might be where you extract the value for use
+				FetchNext();
 				return P2(_tokenLocation);
 			}
 			else
@@ -1229,15 +1237,20 @@ Token RecursiveParser::FunctionCall(Token _FuncName)
 	int _original_m_cursorLocation = m_cursorLocation;
 	//get the fucntion definition
 	//m_tokens = m_SymbolTable.GetFunctionDefinition(_FuncName.getString());
-	m_tokens = m_SymbolTable.GetFunctionDefinitionLevel(_FuncName.getString(), m_currentRunLevel);
+	m_tokens = m_SymbolTable.GetFunctionDefinitionLevel(_FuncName.getString(), 0);
 	//move the token iterator to the beginning of the function definition
 	m_currentToken = m_tokens.begin();
 	m_cursorLocation = 0;
+
 	//I might possibly want to increase the symbol table depth at this point. "depth" could be achieved by manipulating the symbol table.
 	//level 0 is reserved for globals and function definitions, level 1 is "main", level 2 is a function call foo() from within main(), level 3 is a function call foo2() from within foo(), ect.
+	m_currentRunLevel++;
+	
 	Brackets();
 	// I need a way to handle return values at this point
 	// that could be accomplished by a function that reduces the symbol table depth then takes the last found "return" value if it was defined. If it was not defined for that level, don't bother returning anything.
+
+	m_currentRunLevel--;
 
 	//after the function is dealt with, return the tokens and iterators
 	m_tokens = _original_m_tokens;
