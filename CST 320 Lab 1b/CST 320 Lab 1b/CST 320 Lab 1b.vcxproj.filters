@@ -195,6 +195,12 @@
     <Text Include="Program13.txt">
       <Filter>Resource Files\New Test Files\RecursiveDecent Test Files</Filter>
     </Text>
+    <Text Include="Program14.txt">
+      <Filter>Resource Files\New Test Files\RecursiveDecent Test Files</Filter>
+    </Text>
+    <Text Include="Program15.txt">
+      <Filter>Resource Files\New Test Files\RecursiveDecent Test Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DFA.cpp">

@@ -14,6 +14,7 @@ class RecursiveParser
 public:
 	RecursiveParser(list<Token> tokens, SymbolTable _symbolTable);
 	bool Parse();
+	bool Run();
 	void PrintErrors();
 	void PrintSymbolTable();
 
@@ -21,9 +22,9 @@ private:
 	void FetchNext();
 	void BackOne();
 	void Print(string _print);
-	
+
 	bool DefineVariable(string key, Token token);
-	
+
 	bool Program();
 	bool Start();
 	bool Definition();
@@ -44,21 +45,32 @@ private:
 	bool Expression();
 	bool Unary_Expression();
 	bool Primary();
-	bool P2(list<Token>::iterator _StatementStart);
+	//bool P2(list<Token>::iterator _StatementStart);
+	bool P2(int _StatementStart);
 
 
-	bool m_RunTime;
+	Token FunctionCall(Token _FuncName, int _Function_Start);
+
+	void MoveCurrentToken(int _numToMove);
+
+	int m_cursorLocation;
+
+	bool m_Processing;
 	bool m_Done;
 
 	list<string> m_errors;
 
 	list<Token> m_tokens;
+	list<Token> _original_m_tokens;
+
 	list<Token>::iterator m_currentToken;
-	//list<Token>::iterator _endToken;
 
 	stack<string> m_ruleTree;
 
 	SymbolTable m_SymbolTable;
+
+	int m_currentRunLevel;
+
 };
 
 #endif

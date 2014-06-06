@@ -434,7 +434,8 @@ void Preprocessor::ParseDefine(string key, string value)
 
 	_symbols[key] = value;
 	Token a(value, TokenType::DEFINE);
-	m_SymbolTable.addSymbol(key, a);
+	//m_SymbolTable.addSymbol(key, a);
+	m_SymbolTable.addSymbolLevel(key, 0, a);
 }
 
 void Preprocessor::ParseIfDef(string key)

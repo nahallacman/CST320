@@ -4,11 +4,14 @@ int test()
 	a = 2 ;
 	input ( a ) ;
 	output ( a ) ;
+	return a ;
 }
 int main() 
 {	
 	int b;
 	b = 1;
 	input ( b ) ;
-	test();
+	output ( b ) ; 
+	b = test ( ) ; 
+	output ( b ) ;
 } 
