@@ -14,10 +14,8 @@ class SymbolTable{
 public:
 	SymbolTable();
 
-	bool checkSymbolTable(string key);
 	bool checkSymbolTableLevel(string _key, int _level);
 
-	//void addSymbol(string key, Token symbol);
 	void addSymbolLevel(string key, int level, Token token);
 
 	void PrintTable();
@@ -26,11 +24,8 @@ public:
 	void Display(string key, Token print);
 	void DisplayLevel(string key, int level, Token print);
 
-	Token GetToken(string key);
 	Token GetTokenLevel(string _key, int _level);
 
-	//void addFunction(string key, list<Token> _funcBody);
-	list<Token> GetFunctionDefinition(string key);
 	list<Token> GetFunctionDefinitionLevel(string _key, int _level);
 
 	void ClearSymbolTableBesidesFunctions();

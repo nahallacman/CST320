@@ -5,12 +5,7 @@ SymbolTable::SymbolTable()
 
 }
 
-/*
-void SymbolTable::addSymbol(string key, Token token)
-{
-	m_SymbolTable[key] = token;
-}
-*/
+
 void SymbolTable::addSymbolLevel(string key, int level, Token token)
 {
 	pair<string, int> a;
@@ -148,18 +143,6 @@ void SymbolTable::Display(string key, Token print)
 	}
 }
 
-bool SymbolTable::checkSymbolTable(string key)
-{
-	if (m_SymbolTable[key].getString() == "")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
 bool SymbolTable::checkSymbolTableLevel(string _key, int _level)
 {
 	pair<string, int> a;
@@ -175,22 +158,12 @@ bool SymbolTable::checkSymbolTableLevel(string _key, int _level)
 	}
 }
 
-Token SymbolTable::GetToken(string key)
-{
-	return m_SymbolTable[key];
-}
-
 Token SymbolTable::GetTokenLevel(string _key, int _level)
 {
 	pair<string, int> a;
 	a.first = _key;
 	a.second = _level;
 	return m_SymbolTable2[a];
-}
-
-list<Token> SymbolTable::GetFunctionDefinition(string key)
-{
-	return m_SymbolTable[key].getTokenList();
 }
 
 list<Token> SymbolTable::GetFunctionDefinitionLevel(string _key, int _level)

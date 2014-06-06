@@ -7,7 +7,6 @@ RecursiveParser::RecursiveParser(list<Token> tokens, SymbolTable _symbolTable) :
 	m_Processing = true;
 	_original_m_tokens = m_tokens;
 	m_currentRunLevel = 0;
-	//_endToken = m_tokens.end();
 }
 
 bool RecursiveParser::Run()
@@ -20,12 +19,10 @@ bool RecursiveParser::Run()
 	m_SymbolTable.ClearSymbolTableBesidesFunctions();
 	m_SymbolTable.ClearSymbolTableLevelBesidesFunctions();
 
-	//m_tokens = m_SymbolTable.GetFunctionDefinition("main");
 	m_tokens = m_SymbolTable.GetFunctionDefinitionLevel("main", 0);
 
 	m_cursorLocation = 0;
 	m_currentToken = m_tokens.begin();
-	//if (Start())
 	if (Brackets())
 	{
 		cout << "Begin stack based rule tree. Printing from the top of the stack." << endl;
@@ -74,16 +71,14 @@ void RecursiveParser::FetchNext()
 	{
 		m_Done = false;
 		++m_cursorLocation;
-		//++m_currentToken;
 	}
 	else
 	{
 		if (m_currentToken == m_tokens.end())
 		{
-			--m_currentToken; //testing this, may want a conditional on the fetch next, not this construct.
+			--m_currentToken; 
 		}
 		m_Done = true;
-		//++m_currentToken;
 		m_errors.push_back("unexpected end of program durring FetchNext");
 	}
 }
@@ -104,7 +99,6 @@ void RecursiveParser::Print(string _print)
 
 void RecursiveParser::PrintSymbolTable()
 {
-	//m_SymbolTable.PrintTable();
 	m_SymbolTable.PrintTableLevel();
 }
 
@@ -240,7 +234,6 @@ bool RecursiveParser::Data_Definition()
 				{
 					x++;
 				}
-				//if (m_SymbolTable.checkSymbolTable(x->getString()))//check if it was in the table
 				if (m_SymbolTable.checkSymbolTableLevel(x->getString(), m_currentRunLevel))//check if it was in the table
 				{
 					//variable definition starts here
@@ -250,7 +243,6 @@ bool RecursiveParser::Data_Definition()
 				else
 				{
 					string error;
-					//Token Terror = m_SymbolTable.GetToken(x->getString());
 					Token Terror = m_SymbolTable.GetTokenLevel(x->getString(), m_currentRunLevel);
 					error += "Varible ";
 					error += x->getString();
@@ -284,47 +276,6 @@ bool RecursiveParser::Data_Definition()
 }
 
 /*
-FUNCTION_DEFINITION = IDENTIFIER '(' FUNC_ARGS ')' PARAMETER_LIST BRACKETS
-*/
-
-/*
-bool RecursiveParser::Function_Definition()
-{
-if (m_currentToken->getTokenType() == TokenType::VARIABLE | m_currentToken->getString() == "main")  // TODO: main definition should not be in this statement
-{
-FetchNext();
-if (m_currentToken->getString() == "(")
-{
-Func_Args(); //because Func_Args can be lambda
-
-FetchNext();
-if (m_currentToken->getString() == ")")
-{
-FetchNext();
-Paramater_List();
-Brackets();
-return true; // not positive about this
-}
-else
-{
-BackOne();
-return false;
-}
-}
-else
-{
-BackOne();
-return false;
-}
-}
-else
-{
-return false;
-}
-}
-*/
-
-/*
 FUNCTION_DEFINITION = IDENTIFIER '(' FUNC_ARGS ')' BRACKETS
 */
 
@@ -337,21 +288,17 @@ bool RecursiveParser::Function_Definition()
 	if ((m_currentToken->getTokenType() == TokenType::VARIABLE) | (m_currentToken->getString() == "main"))  // TODO: main definition should not be in this statement
 	{
 		//check the variable to see if it already used. if it is not in the symboltable then add it to the symbol table as a type function
-		//if (m_SymbolTable.checkSymbolTable(m_currentToken->getString()))
 		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel)) // make sure anywhere you are checking for a function the run level has to be 0
 		{
 			Token fun_def(m_currentToken->getString(), TokenType::FUNCTION, false);
-			//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
 			m_SymbolTable.addSymbolLevel(m_currentToken->getString(), 0, fun_def);
 		}
 		else
 		{
 			string error;
 			error += "Symbol ";
-			//error += m_SymbolTable.GetToken(m_currentToken->getString()).getString();
 			error += m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getString();
 			error += " has already been defined as: ";
-			//error += m_SymbolTable.GetToken(m_currentToken->getString()).getValue();
 			error += m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getValue();
 			m_errors.push_back(error);
 		}
@@ -376,7 +323,6 @@ bool RecursiveParser::Function_Definition()
 					headerStr += " ";
 				}
 				Token fun_def(headerStr, TokenType::FUNCTION, false);
-				//m_SymbolTable.addSymbol(_functionHeader->getString(), fun_def);
 				m_SymbolTable.addSymbolLevel(_functionHeader->getString(), m_currentRunLevel, fun_def);
 
 				list<Token>::iterator fun_body = m_currentToken;
@@ -396,7 +342,7 @@ bool RecursiveParser::Function_Definition()
 						bodyStr += "}";
 						_temp_list.push_back(*m_currentToken);
 					}
-					//bodyStr += m_currentToken->getString();
+					
 					Token fun_body(headerStr, TokenType::FUNCTION, true, bodyStr, _temp_list);
 					//m_SymbolTable.addSymbolLevel(_functionHeader->getString(), m_currentRunLevel, fun_body);
 					m_SymbolTable.addSymbolLevel(_functionHeader->getString(), 0, fun_body);
@@ -580,25 +526,6 @@ bool RecursiveParser::Brackets()
 }
 
 /*
-STATEMENT_GROUP = STATEMENT STATEMENT_GROUP
-| STATEMENT
-*/
-/*
-bool RecursiveParser::Statement_Group()
-{
-Statement();
-if (_Done == false)
-{
-Statement_Group();
-}
-else
-{
-return true;
-}
-}
-*/
-
-/*
 STATEMENT_GROUP = STATEMENT S2
 */
 
@@ -632,7 +559,7 @@ bool RecursiveParser::S2()
 		}
 		else
 		{
-			FetchNext(); //testing this recursive loop
+			FetchNext();
 			return true;
 		}
 	}
@@ -802,7 +729,6 @@ bool RecursiveParser::Statement()
 					{
 						if (m_Processing == false)
 						{
-							//cout << "Output(" << outputMe.getString() << "): " << m_SymbolTable.GetToken(outputMe.getString()).getValue() << endl;
 							cout << "Output(" << outputMe.getString() << "): " << m_SymbolTable.GetTokenLevel(outputMe.getString(), m_currentRunLevel).getValue() << endl;
 						}
 						FetchNext();
@@ -835,12 +761,10 @@ bool RecursiveParser::Statement()
 			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
-		//m_errors.push_back("output statements not yet implimented");
-		//return false;
 	}
 	else if (m_currentToken->getString() == "return") // 'return' RETURN ';' |
 	{
-		FetchNext(); //here is where I would save the return value for that level when I change the symbol table structure
+		FetchNext(); 
 		Return();
 		if (m_currentToken->getString() == ";")
 		{
@@ -915,6 +839,7 @@ bool RecursiveParser::Else()
 	}
 }
 
+//this rule needs a lot of updating
 /*
 RETURN = EXPRESSION
 | lambda
@@ -935,8 +860,6 @@ bool RecursiveParser::Return()
 			error += m_currentToken->getString();
 			error += " was used in a return statement without being declared first";
 			m_errors.push_back(error);
-			//Token fun_def(m_currentToken->getString(), TokenType::VARIABLE, false);
-			//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
 			return false;
 		}
 		else
@@ -970,8 +893,6 @@ bool RecursiveParser::Return()
 				error += m_currentToken->getString();
 				error += " was used in a return statement without being defined first (but it was declared first)";
 				m_errors.push_back(error);
-				//Token fun_def(m_currentToken->getString(), TokenType::VARIABLE, false);
-				//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
 				FetchNext();
 				return false;
 			}
@@ -988,19 +909,6 @@ bool RecursiveParser::Return()
 		BackOne();
 		return true;
 	}
-	/*
-	if (Expression())
-	{
-	// maybe?
-	return true;
-	}
-	else
-	{
-	m_ruleTree.pop();
-	BackOne();
-	return true;
-	}
-	*/
 }
 
 /*
@@ -1045,56 +953,6 @@ bool RecursiveParser::Unary_Expression()
 }
 
 /*
-PRIMARY =      	'(' EXPRESSION ')' |
-CONSTANT |
-IDENTIFIER P2
-*/
-
-/*
-bool RecursiveParser::Primary()
-{
-if (m_currentToken->getString() == "(") //'(' EXPRESSION ')'
-{
-FetchNext();
-if (Expression())
-{
-FetchNext();
-if (m_currentToken->getString() == ")")
-{
-return true;
-}
-else
-{
-BackOne();
-BackOne();
-BackOne();
-return false;
-}
-}
-else
-{
-BackOne();
-BackOne();
-return false;
-}
-}
-else if (m_currentToken->getTokenType() == TokenType::NUMCONSTANT) //CONSTANT
-{
-return true;
-}
-else if (m_currentToken->getTokenType() == TokenType::VARIABLE)
-{
-FetchNext();
-return P2();
-}
-else
-{
-return false;
-}
-}
-*/
-
-/*
 PRIMARY =	CONSTANT |
 IDENTIFIER P2
 */
@@ -1110,8 +968,6 @@ bool RecursiveParser::Primary()
 	else if (m_currentToken->getTokenType() == TokenType::VARIABLE)
 	{
 		//check if variable has been declared AND defined. If it is, move on. If it isn't, error message and return false;
-		//if (m_SymbolTable.checkSymbolTable(m_currentToken->getString()))
-		//if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel) || m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), 0))
 		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel) == true && m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), 0) == true)
 		{
 			//variable hasn't been declared yet
@@ -1120,23 +976,17 @@ bool RecursiveParser::Primary()
 			error += m_currentToken->getString();
 			error += " was used without being declared first";
 			m_errors.push_back(error);
-			//Token fun_def(m_currentToken->getString(), TokenType::VARIABLE, false);
-			//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
 			return false;
 		}
 		else
 		{
 			//variable has been declared
 			//check if it is defined
-
-			//if (m_SymbolTable.GetToken(m_currentToken->getString()).getIsDefined())
 			if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getIsDefined()) // variable defined at this run level
 			{
-				//list<Token>::iterator _IdentifierStart = m_currentToken;
 				int _tokenLocation = m_cursorLocation;
 				//it is defined! when building the final project, this might be where you extract the value for use
 				FetchNext();
-				//return P2(_IdentifierStart);
 				return P2(_tokenLocation);
 			}
 			else if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getIsDefined()) // global variable or functions
@@ -1148,11 +998,9 @@ bool RecursiveParser::Primary()
 			}
 			else
 			{
-				//list<Token>::iterator _IdentifierStart = m_currentToken;
 				int _tokenLocation = m_cursorLocation;
 				//it is not defined, so try to define it
 				FetchNext();
-				//return P2(_IdentifierStart);
 				return P2(_tokenLocation);
 			}
 		}
@@ -1189,7 +1037,7 @@ bool RecursiveParser::P2(int _StatementStart)
 				FunctionCall(*m_currentToken, _StatementStart);
 				MoveCurrentToken(m_originalcursorLocation);
 			}
-			FetchNext();//possibly, testing this
+			FetchNext();
 			return true;
 		}
 		else
@@ -1226,7 +1074,6 @@ bool RecursiveParser::P2(int _StatementStart)
 		{
 			int m_originalcursorLocation1 = m_cursorLocation;
 			MoveCurrentToken(_StatementStart);
-			//if (m_SymbolTable.GetToken(m_currentToken->getString()).getIsDefined()) 
 			if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getIsDefined())
 			{
 				//redefine!
@@ -1254,9 +1101,7 @@ bool RecursiveParser::P2(int _StatementStart)
 			MoveCurrentToken(_StatementStart);
 
 
-			//bodyStr += m_currentToken->getString();
 			Token equals_body(m_currentToken->getString(), TokenType::VARIABLE, true, bodyStr);
-			//m_SymbolTable.addSymbol(_StatementStart->getString(), equals_body);
 			DefineVariable(m_currentToken->getString(), equals_body);
 			MoveCurrentToken(m_originalcursorLocation2);
 
@@ -1294,43 +1139,16 @@ bool RecursiveParser::P2(int _StatementStart)
 	}
 }
 
-/*
-OTHER RULES THAT SHOULD BE IMPLIMENTED IN LINE POSSIBLY?
-OR A FUNCTION THAT CHECKS IF IT IS AN IDENTIFIER OR WHATEVER AND RETURNS A BOOL
-IDENTIFIER = Letter {Letter | Digit}
-
-CONSTANT = Digit {Digit}
-
-letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
-| "H" | "I" | "J" | "K" | "L" | "M" | "N"
-| "O" | "P" | "Q" | "R" | "S" | "T" | "U"
-| "V" | "W" | "X" | "Y" | "Z" ;
-
-digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
-*/
-
 bool RecursiveParser::DefineVariable(string key, Token token)
 {
-	/*
-	if (!m_Processing)
-	{
-	if (!m_SymbolTable.checkSymbolTableLevel(key, 0))
-	{
-	int a = 1;
-	//if the string is already defined as a function, ignore it.
-	}
-	}
-	*/
+
 	bool retval = false;
-	//if (!m_SymbolTable.checkSymbolTable(key))
 	if (!m_SymbolTable.checkSymbolTableLevel(key, m_currentRunLevel))
 	{
-		//cout << "Prompt::Variable: " << key << " already defined as " << m_SymbolTable.GetToken(key).getValue() << endl;
 		cout << "Prompt::Variable: " << key << " already defined as " << m_SymbolTable.GetTokenLevel(key, m_currentRunLevel).getValue() << endl;
 	}
 	cout << "Prompt::Variable: " << key << " now defined as " << token.getValue() << endl;
 	token.setIsDefined(true);
-	//m_SymbolTable.addSymbol(key, token);
 	m_SymbolTable.addSymbolLevel(key, m_currentRunLevel, token);
 	return retval;
 }
@@ -1343,7 +1161,6 @@ Token RecursiveParser::FunctionCall(Token _FuncName, int _Function_Start)
 	//and a count of where we were
 	int _original_m_cursorLocation = m_cursorLocation;
 	//get the fucntion definition
-	//m_tokens = m_SymbolTable.GetFunctionDefinition(_FuncName.getString());
 	m_tokens = m_SymbolTable.GetFunctionDefinitionLevel(_FuncName.getString(), 0);
 	//move the token iterator to the beginning of the function definition
 	m_currentToken = m_tokens.begin();
@@ -1371,7 +1188,7 @@ Token RecursiveParser::FunctionCall(Token _FuncName, int _Function_Start)
 
 	//probably do way 2, just for time. Eventually I can fix this project up if I wish to show it to people.
 
-
+	//turns out this wasn't the place to do it. Moved this logic into P2().
 
 	//Token search_for = 
 	//DefineVariable()
@@ -1389,3 +1206,18 @@ void RecursiveParser::MoveCurrentToken(int _numToMove)
 		FetchNext();
 	}
 }
+
+
+/*
+These are extra rules that are done inline by adding and checking types. There could be an extension function here that has specific checks when doing certain types.
+IDENTIFIER = Letter {Letter | Digit}
+
+CONSTANT = Digit {Digit}
+
+letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
+| "H" | "I" | "J" | "K" | "L" | "M" | "N"
+| "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+| "V" | "W" | "X" | "Y" | "Z" ;
+
+digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+*/
