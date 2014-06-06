@@ -13,7 +13,7 @@ RecursiveParser::RecursiveParser(list<Token> tokens, SymbolTable _symbolTable) :
 bool RecursiveParser::Run()
 {
 	m_currentRunLevel = 1;
-	m_cursorLocation = 0; // this is a maybe, testing this line
+	
 	m_Processing = false;
 	m_Done = false;
 	m_tokens.erase(m_tokens.begin(), m_tokens.end());
@@ -23,6 +23,7 @@ bool RecursiveParser::Run()
 	//m_tokens = m_SymbolTable.GetFunctionDefinition("main");
 	m_tokens = m_SymbolTable.GetFunctionDefinitionLevel("main", 0);
 
+	m_cursorLocation = 0;
 	m_currentToken = m_tokens.begin();
 	//if (Start())
 	if (Brackets())
@@ -330,6 +331,7 @@ FUNCTION_DEFINITION = IDENTIFIER '(' FUNC_ARGS ')' BRACKETS
 bool RecursiveParser::Function_Definition()
 {
 	list<Token>::iterator _Function_DefinitionStart = m_currentToken;
+	int _Function_DefinitionStartCursor = m_cursorLocation;
 	list<Token>::iterator _functionHeader;
 	m_ruleTree.push("Function_Definition");
 	if ((m_currentToken->getTokenType() == TokenType::VARIABLE) | (m_currentToken->getString() == "main"))  // TODO: main definition should not be in this statement
@@ -409,14 +411,15 @@ bool RecursiveParser::Function_Definition()
 			else
 			{
 				m_errors.push_back("Missing ) in Function_Definition()");
-				m_currentToken = _Function_DefinitionStart;
+				
+				MoveCurrentToken(_Function_DefinitionStartCursor);
 				return false;
 			}
 		}
 		else
 		{
 			m_errors.push_back("Missing ( in Function_Definition()");
-			m_currentToken = _Function_DefinitionStart;
+			MoveCurrentToken(_Function_DefinitionStartCursor);
 			return false;
 		}
 	}
@@ -531,6 +534,7 @@ BRACKETS = '{' DATA_DEFINITION_LIST STATEMENT_GROUP '}
 bool RecursiveParser::Brackets()
 {
 	list<Token>::iterator _BracketsStart = m_currentToken;
+	int _BracketsCursorStart = m_cursorLocation;
 	m_ruleTree.push("Brackets");
 	if (m_currentToken->getString() == "{")
 	{
@@ -549,21 +553,21 @@ bool RecursiveParser::Brackets()
 				else
 				{
 					m_errors.push_back("Missing a } for Brackets()");
-					m_currentToken = _BracketsStart;
+					MoveCurrentToken(_BracketsCursorStart);
 					return false;
 				}
 			}
 			else
 			{
 				m_errors.push_back("Malformed Statement_Group() in Brackets()");
-				m_currentToken = _BracketsStart;
+				MoveCurrentToken(_BracketsCursorStart);
 				return false;
 			}
 		}
 		else
 		{
 			m_errors.push_back("Malformed Data_Definition_List() in Brackets()");
-			m_currentToken = _BracketsStart;
+			MoveCurrentToken(_BracketsCursorStart);
 			return false;
 		}
 	}
@@ -653,6 +657,7 @@ bool RecursiveParser::Statement()
 {
 	m_ruleTree.push("Statement");
 	list<Token>::iterator _StatementStart = m_currentToken;
+	int _StatementStartCursor = m_cursorLocation;
 	if (m_currentToken->getString() == "if") //'if' '(' EXPRESSION ')' BRACKETS ELSE
 	{
 		FetchNext();
@@ -671,21 +676,21 @@ bool RecursiveParser::Statement()
 				{
 					m_errors.push_back("no brackets after an if statement");
 					//BackOnes won't work. Need to copy pointer as it comes into the function and return it if it doesn't work
-					m_currentToken = _StatementStart;
+					MoveCurrentToken(_StatementStartCursor);
 					return false;
 				}
 			}
 			else
 			{
 				m_errors.push_back("no matching ) after an if statement");
-				m_currentToken = _StatementStart;
+				MoveCurrentToken(_StatementStartCursor);
 				return false;
 			}
 		}
 		else
 		{
 			m_errors.push_back("no ( after an if statement");
-			m_currentToken = _StatementStart;
+			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
 	}
@@ -706,21 +711,21 @@ bool RecursiveParser::Statement()
 				else
 				{
 					m_errors.push_back("no brackets after a while statement");
-					m_currentToken = _StatementStart;
+					MoveCurrentToken(_StatementStartCursor);
 					return false;
 				}
 			}
 			else
 			{
 				m_errors.push_back("no matching ) after a while statement");
-				m_currentToken = _StatementStart;
+				MoveCurrentToken(_StatementStartCursor);
 				return false;
 			}
 		}
 		else
 		{
 			m_errors.push_back("no ( after a while statement");
-			m_currentToken = _StatementStart;
+			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
 	}
@@ -755,28 +760,28 @@ bool RecursiveParser::Statement()
 					else
 					{
 						m_errors.push_back("no ; after an input statement");
-						m_currentToken = _StatementStart;
+						MoveCurrentToken(_StatementStartCursor);
 						return false;
 					}
 				}
 				else
 				{
 					m_errors.push_back("no matching ) after an input statement");
-					m_currentToken = _StatementStart;
+					MoveCurrentToken(_StatementStartCursor);
 					return false;
 				}
 			}
 			else
 			{
 				m_errors.push_back("no variable in input statement");
-				m_currentToken = _StatementStart;
+				MoveCurrentToken(_StatementStartCursor);
 				return false;
 			}
 		}
 		else
 		{
 			m_errors.push_back("no ( after an input statement");
-			m_currentToken = _StatementStart;
+			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
 	}
@@ -806,28 +811,28 @@ bool RecursiveParser::Statement()
 					else
 					{
 						m_errors.push_back("no ; after an output statement");
-						m_currentToken = _StatementStart;
+						MoveCurrentToken(_StatementStartCursor);
 						return false;
 					}
 				}
 				else
 				{
 					m_errors.push_back("no matching ) after an output statement");
-					m_currentToken = _StatementStart;
+					MoveCurrentToken(_StatementStartCursor);
 					return false;
 				}
 			}
 			else
 			{
 				m_errors.push_back("no variable in output statement");
-				m_currentToken = _StatementStart;
+				MoveCurrentToken(_StatementStartCursor);
 				return false;
 			}
 		}
 		else
 		{
 			m_errors.push_back("no ( after an output statement");
-			m_currentToken = _StatementStart;
+			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
 		//m_errors.push_back("output statements not yet implimented");
@@ -845,7 +850,7 @@ bool RecursiveParser::Statement()
 		else
 		{
 			m_errors.push_back("no ; after a return statement");
-			m_currentToken = _StatementStart;
+			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
 	}
@@ -860,7 +865,7 @@ bool RecursiveParser::Statement()
 		else
 		{
 			m_errors.push_back("no ; after a EXPRESSION");
-			m_currentToken = _StatementStart;
+			MoveCurrentToken(_StatementStartCursor);
 			return false;
 		}
 	}
@@ -919,6 +924,71 @@ bool RecursiveParser::Return()
 {
 	m_ruleTree.push("Return");
 	//if (Expression())
+	int m_expressionCursor = m_cursorLocation;
+	if (m_currentToken->getTokenType() == TokenType::VARIABLE)
+	{
+		if (m_SymbolTable.checkSymbolTableLevel(m_currentToken->getString(), m_currentRunLevel) == true)
+		{
+			//variable hasn't been declared yet
+			string error;
+			error += "Variable ";
+			error += m_currentToken->getString();
+			error += " was used in a return statement without being declared first";
+			m_errors.push_back(error);
+			//Token fun_def(m_currentToken->getString(), TokenType::VARIABLE, false);
+			//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
+			return false;
+		}
+		else
+		{
+			//variable has been declared
+			//check if it is defined
+			if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getIsDefined()) // variable defined at this run level
+			{
+				//it is defined! when building the final project, this might be where you extract the value for use
+				if (m_Processing == false)
+				{
+					DefineVariable("return", m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel));
+				}
+				
+				FetchNext();
+				return true;
+			}
+			/*
+			else if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getIsDefined()) // global variable or functions
+			{
+				//it is defined! when building the final project, this might be where you extract the value for use
+				FetchNext();
+				return true;
+			}
+			*/
+			else
+			{
+				//it is not defined, so it can't be returned, error		
+				string error;
+				error += "Variable ";
+				error += m_currentToken->getString();
+				error += " was used in a return statement without being defined first (but it was declared first)";
+				m_errors.push_back(error);
+				//Token fun_def(m_currentToken->getString(), TokenType::VARIABLE, false);
+				//m_SymbolTable.addSymbol(m_currentToken->getString(), fun_def);
+				FetchNext();
+				return false;
+			}
+		}
+	}
+	else if (m_currentToken->getTokenType() == TokenType::NUMCONSTANT)
+	{
+		FetchNext();
+		return true;
+	}
+	else
+	{
+		m_ruleTree.pop();
+		BackOne();
+		return true;
+	}
+	/*
 	if (Expression())
 	{
 		 // maybe?
@@ -930,6 +1000,7 @@ bool RecursiveParser::Return()
 		BackOne();
 		return true;
 	}
+	*/
 }
 
 /*
@@ -1102,6 +1173,7 @@ P2 = '(' FUNC_ARGS ')' |
 bool RecursiveParser::P2(int _StatementStart)
 {
 	list<Token>::iterator _P2Start = m_currentToken;
+	int _P2StartCursor = m_cursorLocation;
 	m_ruleTree.push("P2");
 	if (m_currentToken->getString() == "(")
 	{
@@ -1132,14 +1204,14 @@ bool RecursiveParser::P2(int _StatementStart)
 				else
 				{
 					m_errors.push_back("no ) after func_args() in P2()");
-					m_currentToken = _P2Start;
+					MoveCurrentToken(_P2StartCursor);
 					return false;
 				}
 			}
 			else
 			{
 				m_errors.push_back("error in func_args() in P2()");
-				m_currentToken = _P2Start;
+				MoveCurrentToken(_P2StartCursor);
 				return false;
 			}
 		}
@@ -1149,6 +1221,7 @@ bool RecursiveParser::P2(int _StatementStart)
 
 		FetchNext();
 		list<Token>::iterator _EqualsStart = m_currentToken;
+		int _EqualsStartCursor = m_cursorLocation;
 		if (Expression())
 		{
 			int m_originalcursorLocation1 = m_cursorLocation;
@@ -1164,13 +1237,18 @@ bool RecursiveParser::P2(int _StatementStart)
 				//key from _StatementStart, value from _EqualsStart to m_currentToken (hopefully ;?)
 			}
 			MoveCurrentToken(m_originalcursorLocation1);
+			int m_originalCursorLocation3 = m_cursorLocation;
 
 			// since both paths end up defining,
 			string bodyStr;
-			for (list<Token>::iterator x = _EqualsStart; x != m_currentToken; x++)
+			MoveCurrentToken(_EqualsStartCursor);
+			list<Token>::iterator x = m_currentToken;
+			MoveCurrentToken(m_originalCursorLocation3);
+			while (x != m_currentToken)
 			{
 				bodyStr += x->getString();
 				bodyStr += " ";
+				x++;
 			}
 			int m_originalcursorLocation2 = m_cursorLocation;
 			MoveCurrentToken(_StatementStart);
@@ -1252,18 +1330,10 @@ Token RecursiveParser::FunctionCall(Token _FuncName)
 
 	m_currentRunLevel--;
 
-	//after the function is dealt with, return the tokens and iterators
+	//after the function is dealt with, return the tokens and iterators // I had an idea that this could be extended to just replace the define value here with a token, not sure what the best way to impliment this is
 	m_tokens = _original_m_tokens;
 
 	MoveCurrentToken(_original_m_cursorLocation);
-	/*
-	m_currentToken = m_tokens.begin();
-	m_cursorLocation = 0;
-	for (int i = 1; i < _original_m_cursorLocation; i++)
-	{
-		FetchNext();
-	}
-	*/
 
 	Token retval;
 	return retval;

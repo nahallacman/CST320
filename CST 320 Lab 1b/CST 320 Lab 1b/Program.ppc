@@ -12,6 +12,6 @@ int main()
 	b = 1;
 	input ( b ) ;
 	output ( b ) ; 
-	test ( ) ; 
-	b = 2 ; 
+	b = test ( ) ; 
+	output ( b ) ;
 } 

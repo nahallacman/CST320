@@ -24,7 +24,7 @@ int main()
 	SymbolTable the_symbolTable;
 
 	cout << " Starting Preprocessor " << endl;
-	Preprocessor pp("Program14.txt", the_symbolTable);
+	Preprocessor pp("Program15.txt", the_symbolTable);
 	the_symbolTable = pp.getSymbolTable();
 
 	cout << " Starting Lexical Analyzer " << endl;
