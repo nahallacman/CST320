@@ -13,7 +13,7 @@ RecursiveParser::RecursiveParser(list<Token> tokens, SymbolTable _symbolTable) :
 bool RecursiveParser::Run()
 {
 	m_currentRunLevel = 1;
-	
+
 	m_Processing = false;
 	m_Done = false;
 	m_tokens.erase(m_tokens.begin(), m_tokens.end());
@@ -60,8 +60,8 @@ bool RecursiveParser::Parse()
 
 void RecursiveParser::PrintErrors()
 {
-	for(auto itr = m_errors.begin(); itr != m_errors.end(); ++itr)
-	cout << *itr << endl;
+	for (auto itr = m_errors.begin(); itr != m_errors.end(); ++itr)
+		cout << *itr << endl;
 }
 
 
@@ -119,109 +119,109 @@ bool RecursiveParser::Start()
 
 /*
 PROGRAM = DEFINITION PROGRAM
-     	| DEFINITION
-     	| lambda
- */
+| DEFINITION
+| lambda
+*/
 
- bool RecursiveParser::Program()
- {
-	 m_ruleTree.push("Program");
-	 if (m_Done == true) // lambda
-	 {
-		 return true;
-	 }
-	 else if ( Definition() )
-	 {
-		 //FetchNext(); // this is a maybe
-		 if (m_Done == true) // DEFINITION
-		 {
-			 return true;
-		 }
-		 else // DEFINITION PROGRAM
-		 {
-			 return Program();
-		 }
-	 }
- }
+bool RecursiveParser::Program()
+{
+	m_ruleTree.push("Program");
+	if (m_Done == true) // lambda
+	{
+		return true;
+	}
+	else if (Definition())
+	{
+		//FetchNext(); // this is a maybe
+		if (m_Done == true) // DEFINITION
+		{
+			return true;
+		}
+		else // DEFINITION PROGRAM
+		{
+			return Program();
+		}
+	}
+}
 
- /*
-DEFINITION = ‘int’ D2     	
- */
+/*
+DEFINITION = ‘int’ D2
+*/
 
- bool RecursiveParser::Definition()
- {
-	 m_ruleTree.push("Definition");
+bool RecursiveParser::Definition()
+{
+	m_ruleTree.push("Definition");
 
-	 //if (m_currentToken->getString() == "char" || m_currentToken->getString() == "void" || m_currentToken->getString() == "int")
-	 if (m_currentToken->getString() == "int")
-	 {
-		 FetchNext();
-		 return D2();
-	 }
-	 else
-	 {
-		 m_ruleTree.pop();
-		 return false;
-	 }
- }
+	//if (m_currentToken->getString() == "char" || m_currentToken->getString() == "void" || m_currentToken->getString() == "int")
+	if (m_currentToken->getString() == "int")
+	{
+		FetchNext();
+		return D2();
+	}
+	else
+	{
+		m_ruleTree.pop();
+		return false;
+	}
+}
 
 /*
 D2 = 	DATA_DEFINITION |
-     	FUNCTION_DEFINITION
+FUNCTION_DEFINITION
 */
- bool RecursiveParser::D2()
- {
-	 m_ruleTree.push("D2");
-	 if (Data_Definition()) // DATA_DEFINITION
-	 {
-		 return true;
-	 }
-	 else if (Function_Definition()) // FUNCTION_DEFINITION
-	 {
-		 return true;
-	 }
-	 else
-	 {
-		 m_ruleTree.pop(); 
-		 return false;
-	 }
- }
-
- /*
-DATA_DEFINITION_LIST = ‘int’ DATA_DEFINITION DATA_DEFINITION_LIST
-     	| lambda
- */
-
- bool RecursiveParser::Data_Definition_List()
- {
-	 m_ruleTree.push("Data_Definition_List");
-	if (m_currentToken->getString() == "int")
+bool RecursiveParser::D2()
+{
+	m_ruleTree.push("D2");
+	if (Data_Definition()) // DATA_DEFINITION
 	{
-		 FetchNext();
-		 if (Data_Definition())
-		 {
-			 FetchNext();
-			 return Data_Definition_List();
-		 }
-		 else
-		 {
-			 BackOne();
-			 BackOne();
-			 return false;
-		 }
-	 }
-	 else                    //lambda
-	 {
-		 m_ruleTree.pop();
-		 BackOne();
-		 return true;
-	 }
+		return true;
+	}
+	else if (Function_Definition()) // FUNCTION_DEFINITION
+	{
+		return true;
+	}
+	else
+	{
+		m_ruleTree.pop();
+		return false;
+	}
 }
 
- /*
-DATA_DEFINITION = IDENTIFIER_LIST ';'    
+/*
+DATA_DEFINITION_LIST = ‘int’ DATA_DEFINITION DATA_DEFINITION_LIST
+| lambda
 */
- 
+
+bool RecursiveParser::Data_Definition_List()
+{
+	m_ruleTree.push("Data_Definition_List");
+	if (m_currentToken->getString() == "int")
+	{
+		FetchNext();
+		if (Data_Definition())
+		{
+			FetchNext();
+			return Data_Definition_List();
+		}
+		else
+		{
+			BackOne();
+			BackOne();
+			return false;
+		}
+	}
+	else                    //lambda
+	{
+		m_ruleTree.pop();
+		BackOne();
+		return true;
+	}
+}
+
+/*
+DATA_DEFINITION = IDENTIFIER_LIST ';'
+*/
+
 bool RecursiveParser::Data_Definition()
 {
 	m_ruleTree.push("Data_Definition");
@@ -284,43 +284,43 @@ bool RecursiveParser::Data_Definition()
 }
 
 /*
-FUNCTION_DEFINITION = IDENTIFIER '(' FUNC_ARGS ')' PARAMETER_LIST BRACKETS         	
+FUNCTION_DEFINITION = IDENTIFIER '(' FUNC_ARGS ')' PARAMETER_LIST BRACKETS
 */
 
 /*
 bool RecursiveParser::Function_Definition()
 {
-	if (m_currentToken->getTokenType() == TokenType::VARIABLE | m_currentToken->getString() == "main")  // TODO: main definition should not be in this statement
-	{
-		FetchNext();
-		if (m_currentToken->getString() == "(")
-		{
-			Func_Args(); //because Func_Args can be lambda
+if (m_currentToken->getTokenType() == TokenType::VARIABLE | m_currentToken->getString() == "main")  // TODO: main definition should not be in this statement
+{
+FetchNext();
+if (m_currentToken->getString() == "(")
+{
+Func_Args(); //because Func_Args can be lambda
 
-			FetchNext();
-			if (m_currentToken->getString() == ")")
-			{
-				FetchNext();
-				Paramater_List();
-				Brackets();
-				return true; // not positive about this
-			}
-			else
-			{
-				BackOne();
-				return false;
-			}
-		}
-		else
-		{
-			BackOne();
-			return false;
-		}
-	}
-	else
-	{
-		return false;
-	}
+FetchNext();
+if (m_currentToken->getString() == ")")
+{
+FetchNext();
+Paramater_List();
+Brackets();
+return true; // not positive about this
+}
+else
+{
+BackOne();
+return false;
+}
+}
+else
+{
+BackOne();
+return false;
+}
+}
+else
+{
+return false;
+}
 }
 */
 
@@ -411,7 +411,7 @@ bool RecursiveParser::Function_Definition()
 			else
 			{
 				m_errors.push_back("Missing ) in Function_Definition()");
-				
+
 				MoveCurrentToken(_Function_DefinitionStartCursor);
 				return false;
 			}
@@ -432,7 +432,7 @@ bool RecursiveParser::Function_Definition()
 }
 
 /*
-IDENTIFIER_LIST= IDENTIFIER ID2                               	
+IDENTIFIER_LIST= IDENTIFIER ID2
 */
 
 bool RecursiveParser::Identifier_List()
@@ -472,8 +472,8 @@ bool RecursiveParser::Id2()
 
 /*
 FUNC_ARGS = IDENTIFIER_LIST
-     	| lambda
- */
+| lambda
+*/
 
 bool RecursiveParser::Func_Args()
 {
@@ -484,8 +484,8 @@ bool RecursiveParser::Func_Args()
 
 /*
 PARAMETER_LIST = 'int' IDENTIFIER_LIST ';' PARAMETER_LIST
-     	| lambda
-*/     
+| lambda
+*/
 
 bool RecursiveParser::Paramater_List()
 {
@@ -494,7 +494,7 @@ bool RecursiveParser::Paramater_List()
 	if (m_currentToken->getString() == "int")
 	{
 		FetchNext();
-		if(Identifier_List())
+		if (Identifier_List())
 		{
 			FetchNext();
 			if (m_currentToken->getString() == ";")
@@ -529,7 +529,7 @@ bool RecursiveParser::Paramater_List()
 
 /*
 BRACKETS = '{' DATA_DEFINITION_LIST STATEMENT_GROUP '}
- */
+*/
 
 bool RecursiveParser::Brackets()
 {
@@ -581,20 +581,20 @@ bool RecursiveParser::Brackets()
 
 /*
 STATEMENT_GROUP = STATEMENT STATEMENT_GROUP
-     	| STATEMENT
+| STATEMENT
 */
 /*
 bool RecursiveParser::Statement_Group()
 {
-	Statement();
-	if (_Done == false)
-	{
-		Statement_Group();
-	}
-	else
-	{
-		return true;
-	}
+Statement();
+if (_Done == false)
+{
+Statement_Group();
+}
+else
+{
+return true;
+}
 }
 */
 
@@ -618,7 +618,7 @@ bool RecursiveParser::Statement_Group()
 
 /*
 S2 = STATEMENT_GROUP |
-	lambda
+lambda
 */
 
 bool RecursiveParser::S2()
@@ -646,11 +646,11 @@ bool RecursiveParser::S2()
 
 /*
 STATEMENT =   	'if' '(' EXPRESSION ')' BRACKETS ELSE |
-				'while'  '(' EXPRESSION ')' BRACKETS  |
-				input '(' INPUT ')' ';' |
-				output '(' INPUT ')' ';' |
-				'return' RETURN ';' |
-				EXPRESSION ';'
+'while'  '(' EXPRESSION ')' BRACKETS  |
+input '(' INPUT ')' ';' |
+output '(' INPUT ')' ';' |
+'return' RETURN ';' |
+EXPRESSION ';'
 */
 
 bool RecursiveParser::Statement()
@@ -738,7 +738,7 @@ bool RecursiveParser::Statement()
 			if (m_currentToken->getTokenType() == TokenType::VARIABLE) // check for a variable
 			{
 				//define the variable
-				Token definedAs(m_currentToken->getString(), m_currentToken->getTokenType() );
+				Token definedAs(m_currentToken->getString(), m_currentToken->getTokenType());
 				FetchNext();
 				if (m_currentToken->getString() == ")")	//')'
 				{
@@ -872,7 +872,7 @@ bool RecursiveParser::Statement()
 	//this is a maybe
 	/*else if (Brackets())
 	{
-		return true;
+	return true;
 	}
 	*/
 	else
@@ -886,17 +886,17 @@ bool RecursiveParser::Statement()
 	}
 }
 
-/* 
+/*
 OUTPUT = variable
-		| string
+| string
 
-		THIS IS NOT COMPLETE
+THIS IS NOT COMPLETE
 
 */
 
 /*
 ELSE = ‘else’ STATEMENT
-     	| lambda
+| lambda
 */
 
 bool RecursiveParser::Else()
@@ -917,7 +917,7 @@ bool RecursiveParser::Else()
 
 /*
 RETURN = EXPRESSION
-     	| lambda
+| lambda
 */
 
 bool RecursiveParser::Return()
@@ -950,16 +950,16 @@ bool RecursiveParser::Return()
 				{
 					DefineVariable("return", m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel));
 				}
-				
+
 				FetchNext();
 				return true;
 			}
 			/*
 			else if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), 0).getIsDefined()) // global variable or functions
 			{
-				//it is defined! when building the final project, this might be where you extract the value for use
-				FetchNext();
-				return true;
+			//it is defined! when building the final project, this might be where you extract the value for use
+			FetchNext();
+			return true;
 			}
 			*/
 			else
@@ -991,40 +991,40 @@ bool RecursiveParser::Return()
 	/*
 	if (Expression())
 	{
-		 // maybe?
-		return true;
+	// maybe?
+	return true;
 	}
 	else
 	{
-		m_ruleTree.pop();
-		BackOne();
-		return true;
+	m_ruleTree.pop();
+	BackOne();
+	return true;
 	}
 	*/
 }
 
 /*
 EXPRESSION  =	 IDENTIFIER '=' EXPRESSION |
-             	IDENTIFIER '+=' EXPRESSION   |
-             	IDENTIFIER '-=' EXPRESSION   |
-             	IDENTIFIER '*=' EXPRESSION   |
-             	IDENTIFIER '/=' EXPRESSION   |
-             	IDENTIFIER '%=' EXPRESSION   |
-             	EXPRESSION '==' EXPRESSION   |
-             	EXPRESSION '!=' EXPRESSION   |
-             	EXPRESSION '<'  EXPRESSION   |
-             	EXPRESSION '<=' EXPRESSION   |
-             	EXPRESSION '>'  EXPRESSION   |
-             	EXPRESSION '>=' EXPRESSION   |
-             	EXPRESSION '+'  EXPRESSION   |
-             	EXPRESSION '-'  EXPRESSION   |
-             	EXPRESSION '*'  EXPRESSION   |
-             	EXPRESSION '/'  EXPRESSION   |
-             	EXPRESSION '%'  EXPRESSION   |
-             	UNARY_EXPRESSION
+IDENTIFIER '+=' EXPRESSION   |
+IDENTIFIER '-=' EXPRESSION   |
+IDENTIFIER '*=' EXPRESSION   |
+IDENTIFIER '/=' EXPRESSION   |
+IDENTIFIER '%=' EXPRESSION   |
+EXPRESSION '==' EXPRESSION   |
+EXPRESSION '!=' EXPRESSION   |
+EXPRESSION '<'  EXPRESSION   |
+EXPRESSION '<=' EXPRESSION   |
+EXPRESSION '>'  EXPRESSION   |
+EXPRESSION '>=' EXPRESSION   |
+EXPRESSION '+'  EXPRESSION   |
+EXPRESSION '-'  EXPRESSION   |
+EXPRESSION '*'  EXPRESSION   |
+EXPRESSION '/'  EXPRESSION   |
+EXPRESSION '%'  EXPRESSION   |
+UNARY_EXPRESSION
 */
 /*
-cheating rule: 
+cheating rule:
 EXPRESSION =	  PRIMARY
 */
 
@@ -1035,8 +1035,8 @@ bool RecursiveParser::Expression()
 
 /*
 UNARY_EXPRESSION =    	'++' IDENTIFIER |
-     	     	'--' IDENTIFIER |
-             	PRIMARY
+'--' IDENTIFIER |
+PRIMARY
 */
 
 bool RecursiveParser::Unary_Expression()
@@ -1046,57 +1046,57 @@ bool RecursiveParser::Unary_Expression()
 
 /*
 PRIMARY =      	'(' EXPRESSION ')' |
-				CONSTANT |
-             	IDENTIFIER P2
+CONSTANT |
+IDENTIFIER P2
 */
 
 /*
 bool RecursiveParser::Primary()
 {
-	if (m_currentToken->getString() == "(") //'(' EXPRESSION ')'
-	{
-		FetchNext();
-		if (Expression())
-		{
-			FetchNext();
-			if (m_currentToken->getString() == ")")
-			{
-				return true;
-			}
-			else
-			{
-				BackOne();
-				BackOne();
-				BackOne();
-				return false;
-			}
-		}
-		else
-		{
-			BackOne();
-			BackOne();
-			return false;
-		}
-	}
-	else if (m_currentToken->getTokenType() == TokenType::NUMCONSTANT) //CONSTANT
-	{
-		return true;
-	}
-	else if (m_currentToken->getTokenType() == TokenType::VARIABLE)
-	{
-		FetchNext();
-		return P2();
-	}
-	else
-	{
-		return false;
-	}
+if (m_currentToken->getString() == "(") //'(' EXPRESSION ')'
+{
+FetchNext();
+if (Expression())
+{
+FetchNext();
+if (m_currentToken->getString() == ")")
+{
+return true;
+}
+else
+{
+BackOne();
+BackOne();
+BackOne();
+return false;
+}
+}
+else
+{
+BackOne();
+BackOne();
+return false;
+}
+}
+else if (m_currentToken->getTokenType() == TokenType::NUMCONSTANT) //CONSTANT
+{
+return true;
+}
+else if (m_currentToken->getTokenType() == TokenType::VARIABLE)
+{
+FetchNext();
+return P2();
+}
+else
+{
+return false;
+}
 }
 */
 
 /*
 PRIMARY =	CONSTANT |
-			IDENTIFIER P2
+IDENTIFIER P2
 */
 
 bool RecursiveParser::Primary()
@@ -1128,7 +1128,7 @@ bool RecursiveParser::Primary()
 		{
 			//variable has been declared
 			//check if it is defined
-			
+
 			//if (m_SymbolTable.GetToken(m_currentToken->getString()).getIsDefined())
 			if (m_SymbolTable.GetTokenLevel(m_currentToken->getString(), m_currentRunLevel).getIsDefined()) // variable defined at this run level
 			{
@@ -1166,8 +1166,8 @@ bool RecursiveParser::Primary()
 
 /*
 P2 = '(' FUNC_ARGS ')' |
-	 '=' EXPRESSION |
-		lambda
+'=' EXPRESSION |
+lambda
 */
 
 bool RecursiveParser::P2(int _StatementStart)
@@ -1186,7 +1186,7 @@ bool RecursiveParser::P2(int _StatementStart)
 			{
 				int m_originalcursorLocation = m_cursorLocation;
 				MoveCurrentToken(_StatementStart);
-				FunctionCall(*m_currentToken);
+				FunctionCall(*m_currentToken, _StatementStart);
 				MoveCurrentToken(m_originalcursorLocation);
 			}
 			FetchNext();//possibly, testing this
@@ -1260,6 +1260,25 @@ bool RecursiveParser::P2(int _StatementStart)
 			DefineVariable(m_currentToken->getString(), equals_body);
 			MoveCurrentToken(m_originalcursorLocation2);
 
+			if (m_SymbolTable.checkSymbolTableLevel("return", m_currentRunLevel + 1))
+			{
+				//no return value for the last run level 
+			}
+			else
+			{
+				//return value found, can now be extracted, now I need to see if there is a variable that has a definition of the function that was just called.
+
+				int _second_m_cursorLocation = m_cursorLocation;
+				MoveCurrentToken(_StatementStart + 1);
+				if (m_currentToken->getString() == "=")
+				{
+					MoveCurrentToken(_StatementStart);
+					Token a(m_currentToken->getString(), TokenType::VARIABLE, true, m_SymbolTable.GetTokenLevel("return", m_currentRunLevel + 1).getValue());
+					DefineVariable(m_currentToken->getString(), a);
+				}
+				MoveCurrentToken(_second_m_cursorLocation);
+			}
+
 
 			return true;
 		}
@@ -1283,15 +1302,25 @@ IDENTIFIER = Letter {Letter | Digit}
 CONSTANT = Digit {Digit}
 
 letter = "A" | "B" | "C" | "D" | "E" | "F" | "G"
-   	| "H" | "I" | "J" | "K" | "L" | "M" | "N"
-   	| "O" | "P" | "Q" | "R" | "S" | "T" | "U"
-   	| "V" | "W" | "X" | "Y" | "Z" ;
- 
+| "H" | "I" | "J" | "K" | "L" | "M" | "N"
+| "O" | "P" | "Q" | "R" | "S" | "T" | "U"
+| "V" | "W" | "X" | "Y" | "Z" ;
+
 digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
 */
 
 bool RecursiveParser::DefineVariable(string key, Token token)
 {
+	/*
+	if (!m_Processing)
+	{
+	if (!m_SymbolTable.checkSymbolTableLevel(key, 0))
+	{
+	int a = 1;
+	//if the string is already defined as a function, ignore it.
+	}
+	}
+	*/
 	bool retval = false;
 	//if (!m_SymbolTable.checkSymbolTable(key))
 	if (!m_SymbolTable.checkSymbolTableLevel(key, m_currentRunLevel))
@@ -1306,9 +1335,9 @@ bool RecursiveParser::DefineVariable(string key, Token token)
 	return retval;
 }
 
-Token RecursiveParser::FunctionCall(Token _FuncName)
+Token RecursiveParser::FunctionCall(Token _FuncName, int _Function_Start)
 {
-	
+
 	//save a list of tokens 
 	_original_m_tokens = m_tokens;
 	//and a count of where we were
@@ -1323,10 +1352,8 @@ Token RecursiveParser::FunctionCall(Token _FuncName)
 	//I might possibly want to increase the symbol table depth at this point. "depth" could be achieved by manipulating the symbol table.
 	//level 0 is reserved for globals and function definitions, level 1 is "main", level 2 is a function call foo() from within main(), level 3 is a function call foo2() from within foo(), ect.
 	m_currentRunLevel++;
-	
+
 	Brackets();
-	// I need a way to handle return values at this point
-	// that could be accomplished by a function that reduces the symbol table depth then takes the last found "return" value if it was defined. If it was not defined for that level, don't bother returning anything.
 
 	m_currentRunLevel--;
 
@@ -1334,6 +1361,20 @@ Token RecursiveParser::FunctionCall(Token _FuncName)
 	m_tokens = _original_m_tokens;
 
 	MoveCurrentToken(_original_m_cursorLocation);
+
+
+	// I need a way to handle return values at this point
+	// that could be accomplished by a function that reduces the symbol table depth then takes the last found "return" value if it was defined. If it was not defined for that level, don't bother returning anything.
+
+	//I will achieve a return by taking the function call and replace it with the returned token then feed the changed line back into the statement list construct? Maybe not, not sure where to feed the info to be processed.
+	//or I could do it cheaply and look for the function call in the symbol table and replacing the value
+
+	//probably do way 2, just for time. Eventually I can fix this project up if I wish to show it to people.
+
+
+
+	//Token search_for = 
+	//DefineVariable()
 
 	Token retval;
 	return retval;

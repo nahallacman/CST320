@@ -22,9 +22,9 @@ private:
 	void FetchNext();
 	void BackOne();
 	void Print(string _print);
-	
+
 	bool DefineVariable(string key, Token token);
-	
+
 	bool Program();
 	bool Start();
 	bool Definition();
@@ -49,7 +49,7 @@ private:
 	bool P2(int _StatementStart);
 
 
-	Token FunctionCall(Token _FuncName);
+	Token FunctionCall(Token _FuncName, int _Function_Start);
 
 	void MoveCurrentToken(int _numToMove);
 
